@@ -86,9 +86,12 @@ VALUES  (1, 'Гальцева Ирина Владимировна', '1987-05-12'
         (9, 'Архипова Светлана Измаиловна', '1982-10-30', 'жен', 4, '2002-12-23', '89040882020', 'pass'),
         (10, 'Смирнов Алексей Николаевич', '1995-12-23', 'муж', 5, '2001-01-25', '89993993950', 'pass');
 
+--changeset Anton K:2
 
+ALTER TABLE patient
+ADD CONSTRAINT uniq_phone_number UNIQUE (phone_number);
 
-
-
+ALTER TABLE patient
+ADD COLUMN name VARCHAR(255);
 
 
