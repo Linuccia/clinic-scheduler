@@ -33,7 +33,7 @@ public class Config implements WebMvcConfigurer {
     private String DB_USERNAME;
     @Value("${spring.datasource.password}")
     private String DB_PASSWORD;
-    @Value("${spring.liquibase.should-run}")
+    @Value("${spring.liquibase.enabled}")
     private boolean isLiquibaseRun;
 
     @Autowired
@@ -45,8 +45,8 @@ public class Config implements WebMvcConfigurer {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(DB_DRIVER);
         dataSource.setUrl(DB_URL);
-        //dataSource.setUsername(DB_USERNAME);
-        //dataSource.setPassword(DB_PASSWORD);
+        dataSource.setUsername(DB_USERNAME);
+        dataSource.setPassword(DB_PASSWORD);
 
         return dataSource;
     }
