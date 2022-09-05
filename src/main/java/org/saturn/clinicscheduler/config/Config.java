@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
-
 
 @Configuration
 @EnableWebMvc
@@ -53,11 +54,10 @@ public class Config implements WebMvcConfigurer {
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.put("spring.jpa.show-sql", env.getProperty("spring.jpa.show-sql"));
-        hibernateProperties.put("spring.jpa.hibernate.ddl-auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
-        hibernateProperties.put("spring.jpa.properties.hibernate.dialect",
+        hibernateProperties.put("hibernate.show-sql", env.getProperty("spring.jpa.show-sql"));
+        hibernateProperties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
+        hibernateProperties.put("hibernate.dialect",
                 env.getProperty("spring.jpa.properties.hibernate.dialect"));
-        hibernateProperties.put("spring.jpa.properties.hibernate.current_session_context_class",
                 env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
 
         return hibernateProperties;
@@ -72,4 +72,22 @@ public class Config implements WebMvcConfigurer {
         return springLiquibase;
     }
 
+    @Bean
+    public LocalSessionFactoryBean localSessionFactoryBean() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan("org.saturn");
+        sessionFactory.setHibernateProperties(hibernateProperties());
+
+        return sessionFactory;
+    }
+
+    @Bean
+    public HibernateTransactionManager hibernateTransactionManager() {
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(localSessionFactoryBean().getObject());
+
+        return transactionManager;
+    }
+    
 }
