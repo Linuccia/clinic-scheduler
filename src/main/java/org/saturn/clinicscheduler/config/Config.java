@@ -58,7 +58,6 @@ public class Config implements WebMvcConfigurer {
         hibernateProperties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
         hibernateProperties.put("hibernate.dialect",
                 env.getProperty("spring.jpa.properties.hibernate.dialect"));
-        hibernateProperties.put("hibernate.current_session_context_class",
                 env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
 
         return hibernateProperties;
@@ -90,4 +89,5 @@ public class Config implements WebMvcConfigurer {
 
         return transactionManager;
     }
+    
 }
