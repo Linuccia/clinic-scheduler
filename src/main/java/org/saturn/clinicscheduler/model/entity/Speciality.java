@@ -13,5 +13,5 @@ public class Speciality {
     @Column(name = "id")
     private int id;
     @Column(name = "name")
-    String name;
+    private String name;
 }
