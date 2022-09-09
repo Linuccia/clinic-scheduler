@@ -1,12 +1,11 @@
 package org.saturn.clinicscheduler.controller;
 
-import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class DoctorController {
@@ -19,7 +18,7 @@ public class DoctorController {
     }
 
     @GetMapping("/specialities")
-    public List<Speciality> getSpecialities(){
-        return doctorService.getAllSpecialities();
+    public ResponseEntity<?> getSpecialities(){
+        return new ResponseEntity<>(doctorService.getAllSpecialities(), HttpStatus.OK);
     }
 }
