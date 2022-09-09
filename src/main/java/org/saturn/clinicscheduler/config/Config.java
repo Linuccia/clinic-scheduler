@@ -2,11 +2,13 @@ package org.saturn.clinicscheduler.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -30,6 +32,7 @@ import java.util.Properties;
 @PropertySource(value = "classpath:application.properties")
 public class Config implements WebMvcConfigurer {
 
+    private final Environment env;
     @Value("${spring.datasource.driver-class-name}")
     private String DB_DRIVER;
     @Value("${spring.datasource.url}")
@@ -40,6 +43,11 @@ public class Config implements WebMvcConfigurer {
     private String DB_PASSWORD;
     @Value("${spring.liquibase.enabled}")
     private boolean isLiquibaseRun;
+
+    @Autowired
+    public Config(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public DataSource dataSource() {
@@ -54,10 +62,12 @@ public class Config implements WebMvcConfigurer {
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "create");
-        hibernateProperties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        hibernateProperties.put("hibernate.show-sql", env.getProperty("spring.jpa.show-sql"));
+        hibernateProperties.put("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
+        hibernateProperties.put("hibernate.dialect",
+                env.getProperty("spring.jpa.properties.hibernate.dialect"));
+        hibernateProperties.put("hibernate.current_session_context_class",
+                env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
         return hibernateProperties;
     }
 
@@ -85,7 +95,7 @@ public class Config implements WebMvcConfigurer {
     public SpringLiquibase getSpringLiquibase() {
         SpringLiquibase springLiquibase = new SpringLiquibase();
         springLiquibase.setDataSource(dataSource());
-        springLiquibase.setChangeLog("classpath:liquibase/changelog-master.yml");
+        springLiquibase.setChangeLog(env.getProperty("spring.liquibase.change-log"));
         springLiquibase.setShouldRun(isLiquibaseRun);
         return springLiquibase;
     }
