@@ -1,24 +1,23 @@
 package org.saturn.clinicscheduler.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.service.DoctorService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 public class DoctorController {
 
     private final DoctorService doctorService;
 
-    @Autowired
-    public DoctorController(DoctorService doctorService) {
-        this.doctorService = doctorService;
+    @GetMapping("/specialities")
+    public ResponseEntity<List<Speciality>> getSpecialities() {
+        return ResponseEntity.ok(doctorService.getAllSpecialities());
     }
 
-    @GetMapping("/specialities")
-    public ResponseEntity<?> getSpecialities(){
-        return new ResponseEntity<>(doctorService.getAllSpecialities(), HttpStatus.OK);
-    }
 }
