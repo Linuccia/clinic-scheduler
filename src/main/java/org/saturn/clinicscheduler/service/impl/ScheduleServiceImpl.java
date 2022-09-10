@@ -16,7 +16,9 @@ import org.saturn.clinicscheduler.service.ScheduleService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +37,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         Department department = departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId())
                 .orElseThrow(DepartmentNotFoundException::new);
         List<Schedule> schedules = mapper.mapToSchedules(scheduleUnpartitionedDto, doctor, department);
-        scheduleRepository.saveAllAndFlush(schedules);
+        schedules = scheduleRepository.saveAll(schedules);
         return mapper.mapToResponseDtoList(schedules);
     }
 
     @Override
     public List<ScheduleResponseDto> getAllDoctorSchedules(Long doctorId) {
-        return null;
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(DoctorNotFoundException::new);
+        List<Schedule> schedules = scheduleRepository.findAllByDoctor(doctor);
+        schedules = schedules.stream()
+                .filter(s -> s.getDate().toLocalDate().isAfter(LocalDate.now())
+                        || s.getDate().toLocalDate().isEqual(LocalDate.now()))
+                .collect(Collectors.toList());
+        return mapper.mapToResponseDtoList(schedules);
     }
 
 }
