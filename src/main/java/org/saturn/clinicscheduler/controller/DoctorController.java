@@ -34,7 +34,11 @@ public class DoctorController {
 
     @GetMapping("specialities/{id}/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
+<<<<<<< HEAD
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
+=======
+        return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id).stream().map(doctorMapper::toDto)
+>>>>>>> 597acb0 (doctors by speciality)
                 .collect(Collectors.toList()));
     }
 }
