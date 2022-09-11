@@ -2,7 +2,9 @@ package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.mapper.DepartmentMapper;
+import org.saturn.clinicscheduler.model.dto.request.DepartmentRequestDTO;
 import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
+import org.saturn.clinicscheduler.model.entity.Department;
 import org.saturn.clinicscheduler.repository.DepartmentRepository;
 import org.saturn.clinicscheduler.service.DepartmentService;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentResponseDto> getAll() {
         return departmentMapper.mapToResponseDtoList(departmentRepository.findAll());
+    }
+
+    @Override
+    public DepartmentResponseDto addDepartment(DepartmentRequestDTO departmentRequestDTO) {
+        Department department = departmentMapper.mapToEntity(departmentRequestDTO);
+        departmentRepository.save(department);
+        return departmentMapper.mapToResponseDto(department);
     }
 }
