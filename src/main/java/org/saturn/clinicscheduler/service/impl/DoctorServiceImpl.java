@@ -1,6 +1,7 @@
 package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.repository.DoctorRepository;
 import org.saturn.clinicscheduler.repository.SpecialityRepository;
@@ -21,4 +22,8 @@ public class DoctorServiceImpl implements DoctorService {
         return specialityRepository.findAll();
     }
 
+    @Override
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
 }
