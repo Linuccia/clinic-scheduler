@@ -19,6 +19,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentResponseDto> getAll() {
-        return departmentMapper.toDto(departmentRepository.findAll());
+        return departmentMapper.mapToResponseDtoList(departmentRepository.findAll());
     }
 }

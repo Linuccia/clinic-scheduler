@@ -10,5 +10,5 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DepartmentMapper {
     @Mapping(target = "departmentResponseDTO", source = "department")
-    List<DepartmentResponseDto> toDto(List<Department> department);
+    List<DepartmentResponseDto> mapToResponseDtoList(List<Department> department);
 }
