@@ -9,17 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.sql.Date;
+
 
 @Entity
-@Table(name = "doctor")
+@Table(name = "speciality")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
+public class Speciality {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,24 +26,5 @@ public class Doctor {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "birthdate")
-    private Date birthdate;
-
-    @Column(name = "gender")
-    private String gender;
-
-    @ManyToOne
-    @JoinColumn(name = "speciality_id")
-    private Speciality speciality;
-
-    @Column(name = "works_from_year")
-    private Date worksFromYear;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "password")
-    private String password;
 
 }

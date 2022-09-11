@@ -1,4 +1,7 @@
 package org.saturn.clinicscheduler.mapper;
 
-public class DoctorMapper {
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
+public interface DoctorMapper {
 }
