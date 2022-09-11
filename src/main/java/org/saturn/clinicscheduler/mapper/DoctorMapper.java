@@ -1,17 +1,23 @@
 package org.saturn.clinicscheduler.mapper;
 
+import org.mapstruct.Mapper;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
 import org.saturn.clinicscheduler.model.entity.Doctor;
-import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 
-@Component
-public class DoctorMapper {
+@Mapper(componentModel = "spring")
+public interface DoctorMapper {
 
-    public DoctorInfoDto toDto(Doctor doctor){
-        return new DoctorInfoDto(doctor.getName(), doctor.getBirthdate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-                doctor.getGender(), doctor.getSpeciality().getName(),
-                doctor.getWorksFromYear().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), doctor.getPhoneNumber());
+    default DoctorInfoDto mapToInfoDto(Doctor doctor) {
+        return DoctorInfoDto.builder()
+                .name(doctor.getName())
+                .birthdate(doctor.getBirthdate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+                .gender(doctor.getGender())
+                .speciality(doctor.getSpeciality().getName())
+                .worksFrom(doctor.getWorksFromYear().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+                .phoneNumber(doctor.getPhoneNumber())
+                .build();
     }
+
 }

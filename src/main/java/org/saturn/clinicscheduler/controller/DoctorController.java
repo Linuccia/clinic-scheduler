@@ -27,7 +27,7 @@ public class DoctorController {
 
     @GetMapping("/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
-        return ResponseEntity.ok(doctorService.getAllDoctors().stream().map(doctorMapper::toDto)
+        return ResponseEntity.ok(doctorService.getAllDoctors().stream().map(doctorMapper::mapToInfoDto)
                 .collect(Collectors.toList()));
     }
 }

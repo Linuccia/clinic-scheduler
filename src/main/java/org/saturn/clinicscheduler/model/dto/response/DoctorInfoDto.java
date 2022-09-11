@@ -1,12 +1,14 @@
 package org.saturn.clinicscheduler.model.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.saturn.clinicscheduler.model.entity.Gender;
 
 
 @Data
 @AllArgsConstructor
+@Builder
 public class DoctorInfoDto {
 
     private String name;

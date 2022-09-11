@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @Table(name = "doctor")
 @Data
 public class Doctor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -49,4 +50,5 @@ public class Doctor {
 
     @Column(name = "password")
     private String password;
+
 }
