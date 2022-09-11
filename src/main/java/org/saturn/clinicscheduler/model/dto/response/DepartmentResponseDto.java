@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DepartmentResponseDto {
+
     private String city;
     private String district;
     private String address;
     private String phoneNumber;
+
 }

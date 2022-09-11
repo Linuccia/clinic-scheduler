@@ -1,9 +1,9 @@
 package org.saturn.clinicscheduler.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.model.dto.request.DepartmentRequestDTO;
 import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
 import org.saturn.clinicscheduler.service.DepartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,22 +15,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/departments")
+@RequiredArgsConstructor
 public class DepartmentController {
 
     private final DepartmentService service;
 
-    @Autowired
-    public DepartmentController(DepartmentService service) {
-        this.service = service;
-    }
-
     @GetMapping
-    public ResponseEntity<List<DepartmentResponseDto>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<DepartmentResponseDto>> showAllDepartments() {
+        return ResponseEntity.ok(service.getAllDepartments());
     }
 
     @PostMapping
     public ResponseEntity<DepartmentResponseDto> addDepartment(@RequestBody DepartmentRequestDTO departmentRequestDTO) {
         return ResponseEntity.ok(service.addDepartment(departmentRequestDTO));
     }
+
 }
