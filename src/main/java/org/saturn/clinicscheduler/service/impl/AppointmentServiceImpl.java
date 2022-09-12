@@ -5,7 +5,7 @@ import org.saturn.clinicscheduler.exception.PatientNotFoundException;
 import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
 import org.saturn.clinicscheduler.mapper.AppointmentMapper;
 import org.saturn.clinicscheduler.mapper.PatientMapper;
-import org.saturn.clinicscheduler.model.dto.request.AppointmentResponseDto;
+import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.model.entity.Appointment;
 import org.saturn.clinicscheduler.model.entity.Patient;
 import org.saturn.clinicscheduler.model.entity.Schedule;

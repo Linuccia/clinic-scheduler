@@ -2,7 +2,7 @@ package org.saturn.clinicscheduler.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.saturn.clinicscheduler.model.dto.request.AppointmentResponseDto;
+import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.model.dto.response.PatientInfoDto;
 import org.saturn.clinicscheduler.model.entity.Appointment;
 import org.saturn.clinicscheduler.model.entity.Schedule;

@@ -46,18 +46,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    
     @ExceptionHandler(SpecialityNotFoundException.class)
     protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such ID was not found";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
-                
+
     @ExceptionHandler(ScheduleSlotNotFoundException.class)
-    protected ResponseEntity<Object> scheduleNotFounded(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> scheduleNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This time slot is unavailable";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
+
 }
