@@ -4,6 +4,7 @@ import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
+import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DoctorNotFoundException.class)
     protected ResponseEntity<Object> handleDoctorNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Doctor with such ID was not found";
+        String bodyOfResponse = "Doctor with such ID or speciality was not found";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -41,5 +42,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         String bodyOfResponse = "Phone must by unique";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(SpecialityNotFoundException.class)
+    protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Speciality with such ID was not found";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }
