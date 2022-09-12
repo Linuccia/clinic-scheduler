@@ -8,6 +8,6 @@ import java.util.List;
 public interface DoctorService {
 
     List<Speciality> getAllSpecialities();
-
+    List<Doctor> getDoctorsBySpecialityId(Long id);
     List<Doctor> getAllDoctors();
 }

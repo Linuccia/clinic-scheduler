@@ -8,6 +8,7 @@ import org.saturn.clinicscheduler.service.DoctorService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public class DoctorController {
     @GetMapping("/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
         return ResponseEntity.ok(doctorService.getAllDoctors().stream().map(doctorMapper::mapToInfoDto)
+                .collect(Collectors.toList()));
+    }
+
+    @GetMapping("specialities/{id}/doctors")
+    public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
+        return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
                 .collect(Collectors.toList()));
     }
 }
