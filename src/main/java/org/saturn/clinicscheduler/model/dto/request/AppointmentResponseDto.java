@@ -15,7 +15,7 @@ public class AppointmentResponseDto {
     private String doctorName;
     private String departmentAddress;
     private Integer cabinet;
-    private PatientInfoDto patient;
+    private PatientInfoDto patientInfo;
     private Date date;
     private Time startTime;
 }
