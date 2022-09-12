@@ -13,8 +13,10 @@ public interface AppointmentMapper {
     @Mapping(target = "doctorName", expression = "java(appointment.getDoctor().getName())")
     @Mapping(target = "departmentAddress", expression = "java(schedule.getDepartment().getCity() + \", \" "
             + "+ schedule.getDepartment().getAddress())")
-    @Mapping(target = "cabinet", expression = "java(schedule.schedule.getCabinet())")
+    @Mapping(target = "cabinet", expression = "java(schedule.getCabinet())")
     @Mapping(target = "patientInfo", expression = "java(patientInfoDto)")
+    @Mapping(target = "date", expression = "java(appointment.getDate())")
+    @Mapping(target = "startTime", expression = "java(appointment.getStartTime())")
     AppointmentResponseDto toResponseDto(Appointment appointment, Schedule schedule, PatientInfoDto patientInfoDto);
 
 }

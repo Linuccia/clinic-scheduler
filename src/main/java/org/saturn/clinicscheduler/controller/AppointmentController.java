@@ -5,10 +5,12 @@ import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/appointments")
+@RestController
+@RequestMapping("/appointments")
 @RequiredArgsConstructor
 public class AppointmentController {
 
