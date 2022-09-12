@@ -1,6 +1,8 @@
 package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
+import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.repository.DoctorRepository;
@@ -20,6 +22,16 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<Speciality> getAllSpecialities() {
         return specialityRepository.findAll();
+    }
+
+    @Override
+    public List<Doctor> getDoctorsBySpecialityId(Long id) {
+
+        specialityRepository.findById(id).orElseThrow(() -> { throw new SpecialityNotFoundException(); });
+        List<Doctor> doctors = doctorRepository.getDoctorsBySpecialityId(id);
+        if (doctors.size() > 0) {
+            return doctors;
+        } else throw new DoctorNotFoundException();
     }
 
     @Override
