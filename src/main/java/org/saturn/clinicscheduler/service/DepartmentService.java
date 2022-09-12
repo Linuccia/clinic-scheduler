@@ -6,7 +6,9 @@ import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
 import java.util.List;
 
 public interface DepartmentService {
+
     List<DepartmentResponseDto> getAllDepartments();
 
     DepartmentResponseDto addDepartment(DepartmentRequestDTO departmentRequestDTO);
+
 }

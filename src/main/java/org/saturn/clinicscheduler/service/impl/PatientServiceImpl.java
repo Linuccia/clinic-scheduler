@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientMapper patientMapper;
-
     private final PatientRepository patientRepository;
 
     @Override
@@ -30,6 +29,7 @@ public class PatientServiceImpl implements PatientService {
                 .orElseThrow(() -> {
                     throw new PatientNotFoundException();
                 });
+
         return patientMapper.toInfoDto(patient);
     }
 
@@ -37,19 +37,21 @@ public class PatientServiceImpl implements PatientService {
     @Transactional
     public PatientInfoDto createPatient(PatientCreateDto patientCreateDto) {
         String phoneNumber = patientCreateDto.getPhoneNumber();
-        patientRepository.findByPhoneNumber(phoneNumber).ifPresent(s -> {
-            throw new BusyPhoneNumberException();
-        });
+        patientRepository.findByPhoneNumber(phoneNumber)
+                .ifPresent(s -> {
+                    throw new BusyPhoneNumberException();
+                });
         Patient patient = patientMapper.fromCreateDto(patientCreateDto);
         Patient patientEntity = patientRepository.save(patient);
+
         return patientMapper.toInfoDto(patientEntity);
     }
 
     @Override
-    public List<PatientInfoDto> getAllPatient() {
-        List<Patient> allPatientEntity = patientRepository.findAll();
-        return allPatientEntity.stream()
+    public List<PatientInfoDto> getAllPatients() {
+        return patientRepository.findAll().stream()
                 .map(patientMapper::toInfoDto)
                 .collect(Collectors.toList());
     }
+
 }

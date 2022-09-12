@@ -1,8 +1,7 @@
 package org.saturn.clinicscheduler.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
 import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
 import org.saturn.clinicscheduler.mapper.AppointmentMapper;
@@ -20,6 +19,8 @@ import org.saturn.clinicscheduler.service.AppointmentService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Primary
 @RequiredArgsConstructor
@@ -33,39 +34,37 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Override
-    public AppointmentResponseDto createAnAppointment(Long patientId, Long scheduleId) {
-        Optional<Patient> patient = patientRepository.findById(patientId);
-        if (patient.isEmpty()) {
-            throw new PatientNotFoundException();
-        }
-        Optional<Schedule> timeSlot = scheduleRepository.findById(scheduleId);
-        if (timeSlot.isEmpty()) {
+    public AppointmentResponseDto createAppointment(Long patientId, Long scheduleId) {
+        Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
+        Schedule timeSlot = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleSlotNotFoundException::new);
+        if (!timeSlot.getIsAvailable()) {
             throw new ScheduleSlotNotFoundException();
         }
-        Schedule schedule = timeSlot.get();
-        if (Boolean.FALSE.equals(schedule.getIsAvailable())) {
-            throw new ScheduleSlotNotFoundException();
-        }
-        schedule.setIsAvailable(false);
-        scheduleRepository.save(schedule);
-        Appointment appointment = new Appointment(patient.get(), schedule.getDoctor(),
-            schedule.getDate(), schedule.getStartTime());
-        Appointment savedAppointment = appointmentRepository.save(appointment);
-        return appointmentMapper.toResponseDto(savedAppointment, schedule,
-            patientMapper.toInfoDto(savedAppointment.getPatient()));
+        timeSlot.setIsAvailable(false);
+        scheduleRepository.save(timeSlot);
+        Appointment appointment = Appointment.builder()
+                .patient(patient)
+                .doctor(timeSlot.getDoctor())
+                .date(timeSlot.getDate())
+                .startTime(timeSlot.getStartTime())
+                .build();
+        appointment = appointmentRepository.save(appointment);
+
+        return appointmentMapper.toResponseDto(appointment, timeSlot, patientMapper.toInfoDto(patient));
     }
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByPatient(Long patientId) {
-        Optional<Patient> patient = patientRepository.findById(patientId);
-        List<Appointment> appointmentPatientList = appointmentRepository.findAllByPatient(patient);
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentPatientList);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
+
+        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByPatient(patient));
     }
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByDoctor(Long doctorId) {
-        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
-        List<Appointment> appointmentDoctorList = appointmentRepository.findAllByDoctor(doctor);
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentDoctorList);
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(DoctorNotFoundException::new);
+
+        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByDoctor(doctor));
     }
+
 }

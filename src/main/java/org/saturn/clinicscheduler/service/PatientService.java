@@ -11,5 +11,6 @@ public interface PatientService {
 
     PatientInfoDto createPatient(PatientCreateDto patientCreateDto);
 
-    List<PatientInfoDto> getAllPatient();
+    List<PatientInfoDto> getAllPatients();
+
 }

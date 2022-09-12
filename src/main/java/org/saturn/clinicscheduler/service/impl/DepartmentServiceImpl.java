@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
+
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
 
@@ -28,6 +29,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentResponseDto addDepartment(DepartmentRequestDTO departmentRequestDTO) {
         Department department = departmentMapper.mapToEntity(departmentRequestDTO);
         departmentRepository.save(department);
+
         return departmentMapper.mapToResponseDto(department);
     }
+
 }

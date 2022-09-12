@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Value
 public class PatientInfoDto {
+
     String name;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     LocalDate birthdate;
@@ -14,4 +15,5 @@ public class PatientInfoDto {
     String chiPolicy;
     String passport;
     String phoneNumber;
+
 }

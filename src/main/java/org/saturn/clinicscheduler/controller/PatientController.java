@@ -37,7 +37,7 @@ public class PatientController {
 
     @GetMapping()
     public List<PatientInfoDto> getAllPatient() {
-        return patientService.getAllPatient();
+        return patientService.getAllPatients();
     }
 
 }
