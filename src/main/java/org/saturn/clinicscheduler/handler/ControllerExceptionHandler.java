@@ -52,6 +52,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         String bodyOfResponse = "Speciality with such ID was not found";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
                 
     @ExceptionHandler(ScheduleSlotNotFoundException.class)
     protected ResponseEntity<Object> scheduleNotFounded(RuntimeException ex, WebRequest request) {
