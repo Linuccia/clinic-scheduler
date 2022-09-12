@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -44,10 +45,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
+
+    
     @ExceptionHandler(SpecialityNotFoundException.class)
     protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such ID was not found";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+                
+    @ExceptionHandler(ScheduleSlotNotFoundException.class)
+    protected ResponseEntity<Object> scheduleNotFounded(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "This time slot is unavailable";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 }
