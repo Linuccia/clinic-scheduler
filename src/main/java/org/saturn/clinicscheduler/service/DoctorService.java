@@ -1,5 +1,7 @@
 package org.saturn.clinicscheduler.service;
 
+import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
+import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
 import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 
@@ -16,5 +18,9 @@ public interface DoctorService {
     List<Doctor> getDoctorsBySpecialityId(Long id);
 >>>>>>> 597acb0 (doctors by speciality)
     List<Doctor> getAllDoctors();
+<<<<<<< HEAD
 
+=======
+    DoctorInfoDto createDoctor(DoctorCreateDto doctorDto);
+>>>>>>> ffc8624 (add method create doctor)
 }

@@ -2,6 +2,7 @@ package org.saturn.clinicscheduler.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
+import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.service.DoctorService;
@@ -9,6 +10,8 @@ import org.saturn.clinicscheduler.service.DoctorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,5 +47,10 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
 >>>>>>> dc81426 (fix doctor controller)
                 .collect(Collectors.toList()));
+    }
+
+    @PostMapping("/doctors")
+    public ResponseEntity<DoctorInfoDto> createDoctor(@RequestBody DoctorCreateDto doctorCreateDto){
+        return ResponseEntity.ok(doctorService.createDoctor(doctorCreateDto));
     }
 }
