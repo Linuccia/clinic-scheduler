@@ -45,7 +45,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-
     @ExceptionHandler(SpecialityNotFoundException.class)
     protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such ID was not found";
