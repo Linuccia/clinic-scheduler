@@ -10,17 +10,10 @@ import java.util.List;
 public interface DoctorService {
 
     List<Speciality> getAllSpecialities();
-<<<<<<< HEAD
 
     List<Doctor> getDoctorsBySpecialityId(Long id);
 
-=======
-    List<Doctor> getDoctorsBySpecialityId(Long id);
->>>>>>> 597acb0 (doctors by speciality)
     List<Doctor> getAllDoctors();
-<<<<<<< HEAD
 
-=======
     DoctorInfoDto createDoctor(DoctorCreateDto doctorDto);
->>>>>>> ffc8624 (add method create doctor)
 }

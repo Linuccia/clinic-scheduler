@@ -33,8 +33,6 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<Doctor> getDoctorsBySpecialityId(Long id) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
         List<Doctor> doctors = doctorRepository.getDoctorsBySpecialityId(id);
         if (!doctors.isEmpty()) {
@@ -42,17 +40,6 @@ public class DoctorServiceImpl implements DoctorService {
         } else {
             throw new DoctorNotFoundException();
         }
-=======
-        return doctorRepository.getDoctorsBySpecialityId(id);
->>>>>>> 597acb0 (doctors by speciality)
-=======
-
-        specialityRepository.findById(id).orElseThrow(() -> { throw new SpecialityNotFoundException(); });
-        List<Doctor> doctors = doctorRepository.getDoctorsBySpecialityId(id);
-        if (doctors.size() > 0) {
-            return doctors;
-        } else throw new DoctorNotFoundException();
->>>>>>> 110653d (add exception for speciality)
     }
 
     @Override

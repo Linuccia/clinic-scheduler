@@ -45,17 +45,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 110653d (add exception for speciality)
     @ExceptionHandler(SpecialityNotFoundException.class)
     protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such ID was not found";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
-<<<<<<< HEAD
 
     @ExceptionHandler(ScheduleSlotNotFoundException.class)
     protected ResponseEntity<Object> scheduleNotFound(RuntimeException ex, WebRequest request) {
@@ -64,6 +59,4 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-=======
->>>>>>> 110653d (add exception for speciality)
 }
