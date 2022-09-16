@@ -4,6 +4,7 @@ import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
+import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
 import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -63,6 +64,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(SpecialityAlreadyExistException.class)
     protected ResponseEntity<Object> specialityAlreadyExist(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such name already exist";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(ScheduleIsBookedException.class)
+    protected ResponseEntity<Object> scheduleIsBooked(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "This schedule is booked. You can't change it";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
