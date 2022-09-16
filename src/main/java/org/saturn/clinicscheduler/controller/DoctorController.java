@@ -1,13 +1,13 @@
 package org.saturn.clinicscheduler.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.saturn.clinicscheduler.mapper.DoctorMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.service.DoctorService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,30 +17,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class DoctorController {
 
     private final DoctorService doctorService;
-    private final DoctorMapper doctorMapper;
 
     @GetMapping("/specialities")
     public ResponseEntity<List<Speciality>> getSpecialities(){
         return ResponseEntity.ok(doctorService.getAllSpecialities());
     }
 
-    @GetMapping("/doctors")
-    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
-        return ResponseEntity.ok(doctorService.getAllDoctors().stream().map(doctorMapper::mapToInfoDto)
-                .collect(Collectors.toList()));
-    }
-
     @GetMapping("specialities/{id}/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
-        return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id));
+    }
+    
+    @PutMapping("specialities/{id}")
+    public ResponseEntity<Speciality> changeSpeciality(@PathVariable Long id,
+                                                       @RequestParam String title){
+        return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
+    }
+
+    @GetMapping("/doctors")
+    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
+        return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
     @PostMapping("/doctors")
@@ -48,9 +50,8 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.createDoctor(doctorCreateDto));
     }
 
-    @PutMapping("specialities/{id}")
-    public ResponseEntity<Speciality> changeSpeciality(@PathVariable Long id,
-                                                       @RequestParam String title){
-        return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
+    @DeleteMapping("/doctors/{id}")
+    public ResponseEntity<DoctorInfoDto> deleteDoctor(@PathVariable Long id){
+        return ResponseEntity.ok((doctorService.deleteDoctor(id)));
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +34,10 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<Doctor> getDoctorsBySpecialityId(Long id) {
+    public List<DoctorInfoDto> getDoctorsBySpecialityId(Long id) {
         specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
-        List<Doctor> doctors = doctorRepository.getDoctorsBySpecialityId(id);
+        List<DoctorInfoDto> doctors = doctorRepository.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
+                .collect(Collectors.toList());
         if (!doctors.isEmpty()) {
             return doctors;
         } else {
@@ -44,22 +46,31 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<Doctor> getAllDoctors() {
-        return doctorRepository.findAll();
+    public List<DoctorInfoDto> getAllDoctors() {
+        return doctorRepository.findAll().stream().map(doctorMapper::mapToInfoDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public DoctorInfoDto createDoctor(DoctorCreateDto doctorCreateDto) {
-        Optional<Speciality> speciality = Optional.ofNullable(specialityRepository.findById(doctorCreateDto.getSpecialityId())
-                .orElseThrow(() -> { throw new SpecialityNotFoundException(); }));
+        Speciality speciality = specialityRepository.findById(doctorCreateDto.getSpecialityId())
+                .orElseThrow(SpecialityNotFoundException::new);
         String phone = doctorCreateDto.getPhoneNumber();
         doctorRepository.getDoctorByPhoneNumber(phone).ifPresent(d -> {
             throw new BusyPhoneNumberException();
         });
 
-        Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, speciality.get());
+        Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, speciality);
         doctorRepository.save(doctor);
+        return doctorMapper.mapToInfoDto(doctor);
+    }
+
+    @Override
+    @Transactional
+    public DoctorInfoDto deleteDoctor(Long id) {
+        Doctor doctor = (doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new));
+        doctorRepository.deleteById(id);
         return doctorMapper.mapToInfoDto(doctor);
     }
 
@@ -72,5 +83,4 @@ public class DoctorServiceImpl implements DoctorService {
         speciality.setName(title);
         return specialityRepository.save(speciality);
     }
-
 }
