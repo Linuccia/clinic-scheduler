@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,14 +29,20 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getAllSpecialities());
     }
 
-    @GetMapping("/doctors")
-    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
-        return ResponseEntity.ok(doctorService.getAllDoctors());
-    }
-
     @GetMapping("specialities/{id}/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id));
+    }
+    
+    @PutMapping("specialities/{id}")
+    public ResponseEntity<Speciality> changeSpeciality(@PathVariable Long id,
+                                                       @RequestParam String title){
+        return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
+    }
+
+    @GetMapping("/doctors")
+    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
+        return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
     @PostMapping("/doctors")

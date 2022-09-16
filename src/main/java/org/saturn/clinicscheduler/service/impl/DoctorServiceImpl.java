@@ -3,6 +3,7 @@ package org.saturn.clinicscheduler.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
+import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
@@ -71,5 +72,15 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = (doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new));
         doctorRepository.deleteById(id);
         return doctorMapper.mapToInfoDto(doctor);
+    }
+
+    @Override
+    public Speciality changeSpeciality(Long id, String title) {
+        Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
+        if(specialityRepository.findAll().stream().anyMatch(spec -> spec.getName().equals(title))){
+            throw new SpecialityAlreadyExistException();
+        }
+        speciality.setName(title);
+        return specialityRepository.save(speciality);
     }
 }
