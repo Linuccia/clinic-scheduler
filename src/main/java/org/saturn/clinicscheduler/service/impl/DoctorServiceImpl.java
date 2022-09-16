@@ -53,14 +53,14 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public DoctorInfoDto createDoctor(DoctorCreateDto doctorCreateDto) {
-        Optional<Speciality> speciality = Optional.ofNullable(specialityRepository.findById(doctorCreateDto.getSpecialityId())
-                .orElseThrow(() -> { throw new SpecialityNotFoundException(); }));
+        Speciality speciality = specialityRepository.findById(doctorCreateDto.getSpecialityId())
+                .orElseThrow(SpecialityNotFoundException::new);
         String phone = doctorCreateDto.getPhoneNumber();
         doctorRepository.getDoctorByPhoneNumber(phone).ifPresent(d -> {
             throw new BusyPhoneNumberException();
         });
 
-        Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, speciality.get());
+        Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, speciality);
         doctorRepository.save(doctor);
         return doctorMapper.mapToInfoDto(doctor);
     }
@@ -68,7 +68,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public DoctorInfoDto deleteDoctor(Long id) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new);
+        Doctor doctor = (doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new));
         doctorRepository.deleteById(id);
         return doctorMapper.mapToInfoDto(doctor);
     }
