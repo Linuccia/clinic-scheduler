@@ -41,11 +41,4 @@ public class Appointment {
 
     @Column(name = "start_time")
     private Time startTime;
-
-    public Appointment(Patient patient, Doctor doctor, Date date, Time startTime) {
-        this.patient = patient;
-        this.doctor = doctor;
-        this.date = date;
-        this.startTime = startTime;
-    }
 }
