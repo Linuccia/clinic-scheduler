@@ -23,6 +23,18 @@ public interface ScheduleMapper {
 
     List<ScheduleResponseDto> mapToResponseDtoList(List<Schedule> schedules);
 
+    default Schedule mapToSingleSchedule(ScheduleUnpartitionedDto scheduleUnpartitionedDto, Doctor doctor,
+                                                            Department department, Schedule schedule){
+        schedule.setDoctor(doctor);
+        schedule.setDepartment(department);
+        schedule.setIsAvailable(true);
+        schedule.setDate(scheduleUnpartitionedDto.getDate());
+        schedule.setStartTime(scheduleUnpartitionedDto.getStartTime());
+        schedule.setEndTime(scheduleUnpartitionedDto.getEndTime());
+        schedule.setCabinet(scheduleUnpartitionedDto.getCabinet());
+        return schedule;
+    }
+
     default List<Schedule> mapToSchedules(ScheduleUnpartitionedDto scheduleUnpartitionedDto,
                                           Doctor doctor,
                                           Department department) {
