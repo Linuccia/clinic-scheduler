@@ -16,4 +16,6 @@ public interface DoctorService {
     List<Doctor> getAllDoctors();
 
     DoctorInfoDto createDoctor(DoctorCreateDto doctorDto);
+
+    Speciality changeSpeciality(Long id, String title);
 }
