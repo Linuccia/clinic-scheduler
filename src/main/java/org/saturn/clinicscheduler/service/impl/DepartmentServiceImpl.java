@@ -33,4 +33,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.mapToResponseDto(department);
     }
 
+    @Override
+    public DepartmentResponseDto deleteDepartment(Long id) {
+        Department department = departmentRepository.getReferenceById(id);
+        departmentRepository.delete(department);
+        return departmentMapper.mapToResponseDto(department);
+    }
+
 }
