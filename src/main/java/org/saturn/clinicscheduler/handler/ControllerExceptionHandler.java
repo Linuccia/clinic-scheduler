@@ -57,7 +57,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> scheduleNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This time slot is unavailable";
         return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(SpecialityAlreadyExistException.class)
