@@ -4,6 +4,7 @@ import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
+import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,6 +56,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ScheduleSlotNotFoundException.class)
     protected ResponseEntity<Object> scheduleNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This time slot is unavailable";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(SpecialityAlreadyExistException.class)
+    protected ResponseEntity<Object> specialityAlreadyExist(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Speciality with such name already exist";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
