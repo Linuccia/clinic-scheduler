@@ -55,16 +55,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByPatient(Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
+        Patient patient = patientRepository.findById(patientId).
+            orElseThrow(PatientNotFoundException::new);
 
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByPatient(patient));
+        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.
+            findAllByPatient(patient));
     }
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByDoctor(Long doctorId) {
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(DoctorNotFoundException::new);
+        Doctor doctor = doctorRepository.findById(doctorId).
+            orElseThrow(DoctorNotFoundException::new);
 
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByDoctor(doctor));
+        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.
+            findAllByDoctor(doctor));
     }
 
 }

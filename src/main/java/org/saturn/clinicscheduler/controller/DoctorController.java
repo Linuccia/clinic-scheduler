@@ -3,6 +3,7 @@ package org.saturn.clinicscheduler.controller;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
+import org.saturn.clinicscheduler.model.dto.response.SpecialityDto;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.service.DoctorService;
 
@@ -29,18 +30,18 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getAllSpecialities());
     }
 
-    @GetMapping("specialities/{id}/doctors")
+    @GetMapping("/specialities/{id}/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id));
     }
     
-    @PutMapping("specialities/{id}")
+    @PutMapping("/specialities/{id}")
     public ResponseEntity<Speciality> changeSpeciality(@PathVariable Long id,
                                                        @RequestParam String title){
         return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
     }
 
-    @DeleteMapping("specialities/{id}")
+    @DeleteMapping("/specialities/{id}")
     public ResponseEntity<Speciality> deleteSpeciality(@PathVariable Long id){
         return ResponseEntity.ok(doctorService.deleteSpeciality(id));
     }
@@ -58,5 +59,10 @@ public class DoctorController {
     @DeleteMapping("/doctors/{id}")
     public ResponseEntity<DoctorInfoDto> deleteDoctor(@PathVariable Long id){
         return ResponseEntity.ok((doctorService.deleteDoctor(id)));
+    }
+
+    @PostMapping("/specialities")
+    public ResponseEntity<SpecialityDto> createSpeciality(@RequestBody SpecialityDto specialityDto){
+        return ResponseEntity.ok(doctorService.createSpeciality(specialityDto));
     }
 }

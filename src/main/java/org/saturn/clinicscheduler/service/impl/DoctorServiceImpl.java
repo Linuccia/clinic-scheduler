@@ -1,13 +1,18 @@
 package org.saturn.clinicscheduler.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
+import org.saturn.clinicscheduler.mapper.SpecialityMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
+import org.saturn.clinicscheduler.model.dto.response.SpecialityDto;
 import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.repository.DoctorRepository;
@@ -16,9 +21,6 @@ import org.saturn.clinicscheduler.service.DoctorService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
@@ -26,6 +28,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final SpecialityRepository specialityRepository;
     private final DoctorMapper doctorMapper;
+    private final SpecialityMapper specialityMapper;
 
     @Override
     public List<Speciality> getAllSpecialities() {
@@ -35,8 +38,9 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorInfoDto> getDoctorsBySpecialityId(Long id) {
         specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
-        List<DoctorInfoDto> doctors = doctorRepository.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
-                .collect(Collectors.toList());
+        List<DoctorInfoDto> doctors = doctorRepository.getDoctorsBySpecialityId(id).stream()
+            .map(doctorMapper::mapToInfoDto)
+            .collect(Collectors.toList());
         if (!doctors.isEmpty()) {
             return doctors;
         } else {
@@ -47,14 +51,14 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorInfoDto> getAllDoctors() {
         return doctorRepository.findAll().stream().map(doctorMapper::mapToInfoDto)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public DoctorInfoDto createDoctor(DoctorCreateDto doctorCreateDto) {
         Speciality speciality = specialityRepository.findById(doctorCreateDto.getSpecialityId())
-                .orElseThrow(SpecialityNotFoundException::new);
+            .orElseThrow(SpecialityNotFoundException::new);
         String phone = doctorCreateDto.getPhoneNumber();
         doctorRepository.getDoctorByPhoneNumber(phone).ifPresent(d -> {
             throw new BusyPhoneNumberException();
@@ -75,18 +79,33 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Speciality deleteSpeciality(Long id) {
-        Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
+        Speciality speciality = specialityRepository.findById(id)
+            .orElseThrow(SpecialityNotFoundException::new);
         specialityRepository.deleteById(id);
         return speciality;
     }
 
     @Override
     public Speciality changeSpeciality(Long id, String title) {
-        Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
-        if(specialityRepository.findAll().stream().anyMatch(spec -> spec.getName().equals(title))){
+        Speciality speciality = specialityRepository.findById(id)
+            .orElseThrow(SpecialityNotFoundException::new);
+        if (specialityRepository.findAll().stream()
+            .anyMatch(spec -> spec.getName().equals(title))) {
             throw new SpecialityAlreadyExistException();
         }
         speciality.setName(title);
         return specialityRepository.save(speciality);
+    }
+
+    @Override
+    public SpecialityDto createSpeciality(SpecialityDto specialityDto) {
+        Speciality speciality = specialityMapper.toSpeciality(specialityDto);
+        Optional<Speciality> specialityOptional =
+            specialityRepository.findByName(speciality.getName());
+        if (specialityOptional.isPresent()) {
+            throw new SpecialityAlreadyExistException();
+        }
+        Speciality savedSpeciality = specialityRepository.save(speciality);
+        return specialityMapper.toSpecialityDTO(savedSpeciality);
     }
 }
