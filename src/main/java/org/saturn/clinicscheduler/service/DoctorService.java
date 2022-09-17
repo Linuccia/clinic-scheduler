@@ -19,4 +19,6 @@ public interface DoctorService {
     DoctorInfoDto createDoctor(DoctorCreateDto doctorDto);
 
     DoctorInfoDto deleteDoctor(Long id);
+
+    Speciality deleteSpeciality(Long id);
 }
