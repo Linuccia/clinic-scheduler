@@ -40,6 +40,11 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
     }
 
+    @DeleteMapping("specialities/{id}")
+    public ResponseEntity<Speciality> deleteSpeciality(@PathVariable Long id){
+        return ResponseEntity.ok(doctorService.deleteSpeciality(id));
+    }
+
     @GetMapping("/doctors")
     public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
         return ResponseEntity.ok(doctorService.getAllDoctors());

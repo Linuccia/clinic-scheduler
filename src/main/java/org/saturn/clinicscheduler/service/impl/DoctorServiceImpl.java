@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,6 +71,13 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = (doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new));
         doctorRepository.deleteById(id);
         return doctorMapper.mapToInfoDto(doctor);
+    }
+
+    @Override
+    public Speciality deleteSpeciality(Long id) {
+        Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
+        specialityRepository.deleteById(id);
+        return speciality;
     }
 
     @Override
