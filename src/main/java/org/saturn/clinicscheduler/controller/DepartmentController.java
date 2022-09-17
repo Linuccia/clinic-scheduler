@@ -6,7 +6,9 @@ import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
 import org.saturn.clinicscheduler.service.DepartmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,11 @@ public class DepartmentController {
     @PostMapping
     public ResponseEntity<DepartmentResponseDto> addDepartment(@RequestBody DepartmentRequestDTO departmentRequestDTO) {
         return ResponseEntity.ok(service.addDepartment(departmentRequestDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentResponseDto> updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequestDTO departmentRequestDTO) {
+        return ResponseEntity.ok(service.updateDepartment(id, departmentRequestDTO));
     }
 
 }

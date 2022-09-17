@@ -1,6 +1,7 @@
 package org.saturn.clinicscheduler.handler;
 
 import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
+import org.saturn.clinicscheduler.exception.DepartmentHasAlreadyExistedException;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
@@ -71,6 +72,13 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ScheduleIsBookedException.class)
     protected ResponseEntity<Object> scheduleIsBooked(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This schedule is booked. You can't change it";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(DepartmentHasAlreadyExistedException.class)
+    protected ResponseEntity<Object> departmentHasAlreadyExisted(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Department with such parameters has already existed";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
