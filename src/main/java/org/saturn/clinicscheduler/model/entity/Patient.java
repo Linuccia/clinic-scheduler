@@ -20,6 +20,7 @@ import java.util.Objects;
 @Getter
 @Setter
 public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -49,8 +50,12 @@ public class Patient {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Patient patient = (Patient) o;
         return Objects.equals(id, patient.id);
     }
@@ -59,4 +64,5 @@ public class Patient {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

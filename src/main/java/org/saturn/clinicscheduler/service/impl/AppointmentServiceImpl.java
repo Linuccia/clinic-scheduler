@@ -37,7 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDto createAppointment(Long patientId, Long scheduleId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
         Schedule timeSlot = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleSlotNotFoundException::new);
-        if (!timeSlot.getIsAvailable()) {
+        if (Boolean.FALSE.equals(timeSlot.getIsAvailable())) {
             throw new ScheduleSlotNotFoundException();
         }
         timeSlot.setIsAvailable(false);

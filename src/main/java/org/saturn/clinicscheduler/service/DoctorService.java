@@ -9,7 +9,7 @@ import java.util.List;
 public interface DoctorService {
 
     List<Speciality> getAllSpecialities();
-    
+
     Speciality changeSpeciality(Long id, String title);
 
     List<DoctorInfoDto> getDoctorsBySpecialityId(Long id);
@@ -21,4 +21,5 @@ public interface DoctorService {
     DoctorInfoDto deleteDoctor(Long id);
 
     Speciality deleteSpeciality(Long id);
+
 }

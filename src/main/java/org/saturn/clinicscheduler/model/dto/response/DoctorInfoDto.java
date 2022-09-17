@@ -3,7 +3,7 @@ package org.saturn.clinicscheduler.model.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.saturn.clinicscheduler.model.entity.Gender;
+import org.saturn.clinicscheduler.model.entity.constant.Gender;
 
 
 @Data

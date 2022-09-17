@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id","phoneNumber"})
+@EqualsAndHashCode(exclude = {"id", "phoneNumber"})
 public class Department {
 
     @Id

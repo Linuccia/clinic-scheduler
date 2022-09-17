@@ -35,8 +35,10 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorInfoDto> getDoctorsBySpecialityId(Long id) {
         specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
-        List<DoctorInfoDto> doctors = doctorRepository.getDoctorsBySpecialityId(id).stream().map(doctorMapper::mapToInfoDto)
+        List<DoctorInfoDto> doctors = doctorRepository.getDoctorsBySpecialityId(id).stream()
+                .map(doctorMapper::mapToInfoDto)
                 .collect(Collectors.toList());
+
         if (!doctors.isEmpty()) {
             return doctors;
         } else {
@@ -62,6 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, speciality);
         doctorRepository.save(doctor);
+
         return doctorMapper.mapToInfoDto(doctor);
     }
 
@@ -70,6 +73,7 @@ public class DoctorServiceImpl implements DoctorService {
     public DoctorInfoDto deleteDoctor(Long id) {
         Doctor doctor = (doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new));
         doctorRepository.deleteById(id);
+
         return doctorMapper.mapToInfoDto(doctor);
     }
 
@@ -77,16 +81,19 @@ public class DoctorServiceImpl implements DoctorService {
     public Speciality deleteSpeciality(Long id) {
         Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
         specialityRepository.deleteById(id);
+
         return speciality;
     }
 
     @Override
     public Speciality changeSpeciality(Long id, String title) {
         Speciality speciality = specialityRepository.findById(id).orElseThrow(SpecialityNotFoundException::new);
-        if(specialityRepository.findAll().stream().anyMatch(spec -> spec.getName().equals(title))){
+        if (specialityRepository.findAll().stream().anyMatch(spec -> spec.getName().equals(title))) {
             throw new SpecialityAlreadyExistException();
         }
         speciality.setName(title);
+
         return specialityRepository.save(speciality);
     }
+
 }

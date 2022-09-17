@@ -14,4 +14,5 @@ public interface PatientMapper {
     PatientRestrictedInfoDto toRestrictedInfoDto(Patient patient);
 
     Patient fromCreateDto(PatientCreateDto patientCreateDto);
+
 }

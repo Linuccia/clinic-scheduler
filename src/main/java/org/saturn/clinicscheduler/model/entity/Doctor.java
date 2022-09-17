@@ -3,6 +3,7 @@ package org.saturn.clinicscheduler.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.saturn.clinicscheduler.model.entity.constant.Gender;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

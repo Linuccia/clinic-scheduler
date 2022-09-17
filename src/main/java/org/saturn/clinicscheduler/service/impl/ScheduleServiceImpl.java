@@ -1,6 +1,5 @@
 package org.saturn.clinicscheduler.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
@@ -41,6 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(DepartmentNotFoundException::new);
         List<Schedule> schedules = mapper.mapToSchedules(scheduleUnpartitionedDto, doctor, department);
         schedules = scheduleRepository.saveAll(schedules);
+
         return mapper.mapToResponseDtoList(schedules);
     }
 
@@ -53,13 +53,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .filter(s -> s.getDate().toLocalDate().isAfter(LocalDate.now())
                         || s.getDate().toLocalDate().isEqual(LocalDate.now()))
                 .collect(Collectors.toList());
+
         return mapper.mapToResponseDtoList(schedules);
     }
 
     @Override
     public ScheduleResponseDto changeSchedule(Long id, ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(ScheduleSlotNotFoundException::new);
-        if(Boolean.FALSE.equals(schedule.getIsAvailable())){
+        if (Boolean.FALSE.equals(schedule.getIsAvailable())) {
             throw new ScheduleIsBookedException();
         }
         Doctor doctor = doctorRepository.findById(scheduleUnpartitionedDto.getDoctorId())
@@ -67,6 +68,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Department department = departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId())
                 .orElseThrow(DepartmentNotFoundException::new);
         schedule = mapper.mapToSingleSchedule(scheduleUnpartitionedDto, doctor, department, schedule);
+
         return mapper.mapToResponseDto(scheduleRepository.save(schedule));
     }
 

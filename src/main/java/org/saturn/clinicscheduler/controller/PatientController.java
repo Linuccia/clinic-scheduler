@@ -31,13 +31,13 @@ public class PatientController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public PatientInfoDto createPatient(@Valid @RequestBody PatientCreateDto patientCreateDto) {
-        return patientService.createPatient(patientCreateDto);
+    public ResponseEntity<PatientInfoDto> createPatient(@Valid @RequestBody PatientCreateDto patientCreateDto) {
+        return ResponseEntity.ok(patientService.createPatient(patientCreateDto));
     }
 
     @GetMapping()
-    public List<PatientInfoDto> getAllPatient() {
-        return patientService.getAllPatients();
+    public ResponseEntity<List<PatientInfoDto>> getAllPatient() {
+        return ResponseEntity.ok(patientService.getAllPatients());
     }
 
 }

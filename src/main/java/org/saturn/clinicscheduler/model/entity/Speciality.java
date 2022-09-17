@@ -37,4 +37,5 @@ public class Speciality {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "speciality_id")
     private List<Doctor> doctors;
+
 }

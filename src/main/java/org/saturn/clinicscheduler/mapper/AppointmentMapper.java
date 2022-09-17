@@ -1,6 +1,7 @@
 package org.saturn.clinicscheduler.mapper;
 
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
@@ -21,5 +22,7 @@ public interface AppointmentMapper {
     AppointmentResponseDto toResponseDto(Appointment appointment, Schedule schedule, PatientInfoDto patientInfoDto);
 
     AppointmentResponseDto toAppointmentResponseDTO(Appointment appointment);
+
     List<AppointmentResponseDto> toAppointmentResponseDTOList(List<Appointment> appointmentList);
+
 }

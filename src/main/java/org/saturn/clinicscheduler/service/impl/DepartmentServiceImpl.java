@@ -38,13 +38,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentResponseDto updateDepartment(Long id, DepartmentRequestDTO departmentRequestDTO) {
         Department updateDepartment = departmentRepository.findById(id).orElseThrow(DepartmentNotFoundException::new);
-        if(departmentRepository.findAll().stream().anyMatch(department -> department.equals(departmentMapper.mapToEntity(departmentRequestDTO)))){
+        if (departmentRepository.findAll().stream().anyMatch(department -> department.equals(departmentMapper
+                .mapToEntity(departmentRequestDTO)))) {
             throw new DepartmentHasAlreadyExistedException();
         }
         updateDepartment.setCity(departmentRequestDTO.getCity());
         updateDepartment.setDistrict(departmentRequestDTO.getDistrict());
         updateDepartment.setAddress(departmentRequestDTO.getAddress());
         updateDepartment.setPhoneNumber(departmentRequestDTO.getPhoneNumber());
+
         return departmentMapper.mapToResponseDto(departmentRepository.save(updateDepartment));
     }
+
 }

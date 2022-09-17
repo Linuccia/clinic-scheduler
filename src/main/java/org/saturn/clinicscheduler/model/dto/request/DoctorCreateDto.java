@@ -14,4 +14,5 @@ public class DoctorCreateDto {
     private String worksFrom;
     private String phoneNumber;
     private String password;
+
 }

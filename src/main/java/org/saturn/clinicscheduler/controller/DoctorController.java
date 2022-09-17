@@ -25,38 +25,39 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping("/specialities")
-    public ResponseEntity<List<Speciality>> getSpecialities(){
+    public ResponseEntity<List<Speciality>> getSpecialities() {
         return ResponseEntity.ok(doctorService.getAllSpecialities());
     }
 
     @GetMapping("specialities/{id}/doctors")
-    public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id){
+    public ResponseEntity<List<DoctorInfoDto>> getDoctorsBySpeciality(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialityId(id));
     }
-    
+
     @PutMapping("specialities/{id}")
     public ResponseEntity<Speciality> changeSpeciality(@PathVariable Long id,
-                                                       @RequestParam String title){
+                                                       @RequestParam String title) {
         return ResponseEntity.ok(doctorService.changeSpeciality(id, title));
     }
 
     @DeleteMapping("specialities/{id}")
-    public ResponseEntity<Speciality> deleteSpeciality(@PathVariable Long id){
+    public ResponseEntity<Speciality> deleteSpeciality(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.deleteSpeciality(id));
     }
 
     @GetMapping("/doctors")
-    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors(){
+    public ResponseEntity<List<DoctorInfoDto>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
     @PostMapping("/doctors")
-    public ResponseEntity<DoctorInfoDto> createDoctor(@RequestBody DoctorCreateDto doctorCreateDto){
+    public ResponseEntity<DoctorInfoDto> createDoctor(@RequestBody DoctorCreateDto doctorCreateDto) {
         return ResponseEntity.ok(doctorService.createDoctor(doctorCreateDto));
     }
 
     @DeleteMapping("/doctors/{id}")
-    public ResponseEntity<DoctorInfoDto> deleteDoctor(@PathVariable Long id){
+    public ResponseEntity<DoctorInfoDto> deleteDoctor(@PathVariable Long id) {
         return ResponseEntity.ok((doctorService.deleteDoctor(id)));
     }
+
 }

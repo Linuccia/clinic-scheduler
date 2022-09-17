@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
 import org.saturn.clinicscheduler.model.entity.Doctor;
-import org.saturn.clinicscheduler.model.entity.Gender;
+import org.saturn.clinicscheduler.model.entity.constant.Gender;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 
 import java.time.LocalDate;
@@ -41,4 +41,5 @@ public interface DoctorMapper {
 
         return doctor;
     }
+
 }
