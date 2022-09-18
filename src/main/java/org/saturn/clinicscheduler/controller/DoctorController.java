@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -52,7 +53,7 @@ public class DoctorController {
     }
 
     @PostMapping("/doctors")
-    public ResponseEntity<DoctorInfoDto> createDoctor(@RequestBody DoctorCreateDto doctorCreateDto) {
+    public ResponseEntity<DoctorInfoDto> createDoctor(@Valid @RequestBody DoctorCreateDto doctorCreateDto) {
         return ResponseEntity.ok(doctorService.createDoctor(doctorCreateDto));
     }
 
@@ -62,7 +63,7 @@ public class DoctorController {
     }
 
     @PostMapping("/specialities")
-    public ResponseEntity<SpecialityDto> createSpeciality(@RequestBody SpecialityDto specialityDto){
+    public ResponseEntity<SpecialityDto> createSpeciality(@Valid @RequestBody SpecialityDto specialityDto){
         return ResponseEntity.ok(doctorService.createSpeciality(specialityDto));
     }
 

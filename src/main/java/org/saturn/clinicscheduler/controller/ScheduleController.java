@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class ScheduleController {
 
     @PostMapping("/schedules")
     public ResponseEntity<List<ScheduleResponseDto>> addSchedule(
-            @RequestBody ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
+            @Valid @RequestBody ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         return ResponseEntity.ok(service.addSchedule(scheduleUnpartitionedDto));
     }
 
@@ -32,8 +33,8 @@ public class ScheduleController {
     }
 
     @PutMapping("/schedules/{id}")
-    public ResponseEntity<ScheduleResponseDto> changeSchedule(@PathVariable Long id,
-                                                              @RequestBody ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
+    public ResponseEntity<ScheduleResponseDto> changeSchedule(
+            @PathVariable Long id, @Valid @RequestBody ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         return ResponseEntity.ok(service.changeSchedule(id, scheduleUnpartitionedDto));
     }
 
