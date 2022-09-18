@@ -9,6 +9,7 @@ import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
+import org.saturn.clinicscheduler.exception.WrongParamsException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
 import org.saturn.clinicscheduler.mapper.SpecialityMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
@@ -117,6 +118,23 @@ public class DoctorServiceImpl implements DoctorService {
         Speciality savedSpeciality = specialityRepository.save(speciality);
 
         return specialityMapper.toSpecialityDTO(savedSpeciality);
+    }
+
+    @Override
+    public DoctorInfoDto updateDoctor(Long id, String attribute, String value) {
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new);
+        switch (attribute){
+            case ("phoneNumber"):
+                doctor.setPhoneNumber(value);
+                break;
+            case ("password"):
+                doctor.setPassword(value);
+                break;
+            default:
+                throw new WrongParamsException();
+        }
+        doctorRepository.save(doctor);
+        return doctorMapper.mapToInfoDto(doctor);
     }
 
 }

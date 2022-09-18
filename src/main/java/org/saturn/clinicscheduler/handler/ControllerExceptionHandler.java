@@ -10,6 +10,7 @@ import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
 import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
 import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
 import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
+import org.saturn.clinicscheduler.exception.WrongParamsException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -121,6 +122,14 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(WrongParamsException.class)
+    protected ResponseEntity<Object> handleWrongParams(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Only phone number and password can be changed";
+
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }
