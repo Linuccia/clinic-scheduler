@@ -1,6 +1,7 @@
 package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.saturn.clinicscheduler.exception.AppointmentNotFoundException;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
 import org.saturn.clinicscheduler.exception.PatientNotFoundException;
 import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
@@ -18,8 +19,11 @@ import org.saturn.clinicscheduler.repository.ScheduleRepository;
 import org.saturn.clinicscheduler.service.AppointmentService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Primary
@@ -34,10 +38,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Override
+    @Transactional
     public AppointmentResponseDto createAppointment(Long patientId, Long scheduleId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
         Schedule timeSlot = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleSlotNotFoundException::new);
-        if (!timeSlot.getIsAvailable()) {
+        if (Boolean.FALSE.equals(timeSlot.getIsAvailable())) {
             throw new ScheduleSlotNotFoundException();
         }
         timeSlot.setIsAvailable(false);
@@ -55,16 +60,39 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByPatient(Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
+        Patient patient = patientRepository.findById(patientId).
+                orElseThrow(PatientNotFoundException::new);
+        List<Appointment> appointments = appointmentRepository.findAllByPatient(patient);
 
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByPatient(patient));
+        return appointments.stream().map(a -> appointmentMapper.toResponseDto(a, scheduleRepository
+                        .findByDoctorAndDateAndStartTime(a.getDoctor(), new Date(a.getDate().getTime()), a.getStartTime())
+                        .orElseThrow(ScheduleSlotNotFoundException::new), patientMapper.toInfoDto(patient)))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByDoctor(Long doctorId) {
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(DoctorNotFoundException::new);
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(DoctorNotFoundException::new);
+        List<Appointment> appointments = appointmentRepository.findAllByDoctor(doctor);
 
-        return appointmentMapper.toAppointmentResponseDTOList(appointmentRepository.findAllByDoctor(doctor));
+        return appointments.stream().map(a -> appointmentMapper.toResponseDto(a, scheduleRepository
+                        .findByDoctorAndDateAndStartTime(a.getDoctor(), new Date(a.getDate().getTime()), a.getStartTime())
+                        .orElseThrow(ScheduleSlotNotFoundException::new), patientMapper.toInfoDto(a.getPatient())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void cancelAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(AppointmentNotFoundException::new);
+        Schedule schedule = scheduleRepository
+                .findByDoctorAndDateAndStartTime(appointment.getDoctor(), new Date(appointment.getDate().getTime()),
+                        appointment.getStartTime())
+                .orElseThrow(ScheduleSlotNotFoundException::new);
+        schedule.setIsAvailable(true);
+        scheduleRepository.save(schedule);
+        appointmentRepository.delete(appointment);
     }
 
 }

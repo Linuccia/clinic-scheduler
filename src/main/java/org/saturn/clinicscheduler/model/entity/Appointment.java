@@ -23,6 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class Appointment {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +42,5 @@ public class Appointment {
 
     @Column(name = "start_time")
     private Time startTime;
+
 }

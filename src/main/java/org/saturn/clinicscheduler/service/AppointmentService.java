@@ -12,4 +12,6 @@ public interface AppointmentService {
 
     List<AppointmentResponseDto> getAllAppointmentsByDoctor(Long doctorId);
 
+    void cancelAppointment(Long id);
+
 }

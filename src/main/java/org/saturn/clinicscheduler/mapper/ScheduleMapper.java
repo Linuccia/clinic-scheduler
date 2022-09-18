@@ -32,6 +32,7 @@ public interface ScheduleMapper {
         schedule.setStartTime(scheduleUnpartitionedDto.getStartTime());
         schedule.setEndTime(scheduleUnpartitionedDto.getEndTime());
         schedule.setCabinet(scheduleUnpartitionedDto.getCabinet());
+
         return schedule;
     }
 
@@ -54,6 +55,7 @@ public interface ScheduleMapper {
             schedules.add(schedule);
             startTime = startTime.plusHours(1);
         }
+
         return schedules;
     }
 

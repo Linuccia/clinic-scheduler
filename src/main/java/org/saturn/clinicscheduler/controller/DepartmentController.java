@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,12 +30,18 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<DepartmentResponseDto> addDepartment(@RequestBody DepartmentRequestDTO departmentRequestDTO) {
+    public ResponseEntity<DepartmentResponseDto> addDepartment(@Valid @RequestBody DepartmentRequestDTO departmentRequestDTO) {
         return ResponseEntity.ok(service.addDepartment(departmentRequestDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DepartmentResponseDto> deleteDepartment(@PathVariable Long id) {
         return ResponseEntity.ok(service.deleteDepartment(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentResponseDto> updateDepartment(@PathVariable Long id,
+                                                                  @Valid @RequestBody DepartmentRequestDTO departmentRequestDTO) {
+        return ResponseEntity.ok(service.updateDepartment(id, departmentRequestDTO));
     }
 }

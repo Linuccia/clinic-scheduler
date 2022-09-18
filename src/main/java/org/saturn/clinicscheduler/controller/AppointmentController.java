@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,12 @@ public class AppointmentController {
     @GetMapping("/doctors/{id}")
     public ResponseEntity<List<AppointmentResponseDto>> getDoctorAppointments(@PathVariable Long id) {
         return ResponseEntity.ok(appointmentService.getAllAppointmentsByDoctor(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> cancelAppointment(@PathVariable Long id) {
+        appointmentService.cancelAppointment(id);
+        return ResponseEntity.ok("The appointment was canceled");
     }
 
 }
