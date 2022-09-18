@@ -44,4 +44,5 @@ public class DepartmentController {
                                                                   @Valid @RequestBody DepartmentRequestDTO departmentRequestDTO) {
         return ResponseEntity.ok(service.updateDepartment(id, departmentRequestDTO));
     }
+
 }
