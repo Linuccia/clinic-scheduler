@@ -28,7 +28,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    @Transactional
     public DepartmentResponseDto addDepartment(DepartmentRequestDTO departmentRequestDTO) {
         Department department = departmentMapper.mapToEntity(departmentRequestDTO);
         departmentRepository.save(department);
@@ -37,7 +36,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    @Transactional
+    public DepartmentResponseDto deleteDepartment(Long id) {
+        Department department = departmentRepository.getReferenceById(id);
+        departmentRepository.delete(department);
+        
+        return departmentMapper.mapToResponseDto(department);
+
+    @Override
     public DepartmentResponseDto updateDepartment(Long id, DepartmentRequestDTO departmentRequestDTO) {
         Department updateDepartment = departmentRepository.findById(id).orElseThrow(DepartmentNotFoundException::new);
         if (departmentRepository.findAll().stream().anyMatch(department -> department.equals(departmentMapper
@@ -51,5 +56,4 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return departmentMapper.mapToResponseDto(departmentRepository.save(updateDepartment));
     }
-
 }
