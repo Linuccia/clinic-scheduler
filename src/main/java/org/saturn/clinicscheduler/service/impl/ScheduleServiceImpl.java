@@ -33,6 +33,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleMapper mapper;
 
     @Override
+    @Transactional
     public List<ScheduleResponseDto> addSchedule(ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         Doctor doctor = doctorRepository.findById(scheduleUnpartitionedDto.getDoctorId())
                 .orElseThrow(DoctorNotFoundException::new);
@@ -58,6 +59,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional
     public ScheduleResponseDto changeSchedule(Long id, ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(ScheduleSlotNotFoundException::new);
         if (Boolean.FALSE.equals(schedule.getIsAvailable())) {

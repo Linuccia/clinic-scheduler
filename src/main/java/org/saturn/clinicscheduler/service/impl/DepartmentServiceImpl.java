@@ -28,6 +28,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public DepartmentResponseDto addDepartment(DepartmentRequestDTO departmentRequestDTO) {
         Department department = departmentMapper.mapToEntity(departmentRequestDTO);
         departmentRepository.save(department);
@@ -36,6 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public DepartmentResponseDto updateDepartment(Long id, DepartmentRequestDTO departmentRequestDTO) {
         Department updateDepartment = departmentRepository.findById(id).orElseThrow(DepartmentNotFoundException::new);
         if (departmentRepository.findAll().stream().anyMatch(department -> department.equals(departmentMapper

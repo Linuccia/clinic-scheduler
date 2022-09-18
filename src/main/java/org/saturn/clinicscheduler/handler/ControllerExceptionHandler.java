@@ -1,5 +1,6 @@
 package org.saturn.clinicscheduler.handler;
 
+import org.saturn.clinicscheduler.exception.AppointmentNotFoundException;
 import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
 import org.saturn.clinicscheduler.exception.DepartmentHasAlreadyExistedException;
 import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
@@ -56,28 +57,35 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ScheduleSlotNotFoundException.class)
-    protected ResponseEntity<Object> scheduleNotFound(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleScheduleNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This time slot is unavailable";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    protected ResponseEntity<Object> handleAppointmentNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Appointment with such ID was not found";
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
     @ExceptionHandler(SpecialityAlreadyExistException.class)
-    protected ResponseEntity<Object> specialityAlreadyExist(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleSpecialityAlreadyExist(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Speciality with such name already exist";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(ScheduleIsBookedException.class)
-    protected ResponseEntity<Object> scheduleIsBooked(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleScheduleIsBooked(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This schedule is booked. You can't change it";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(DepartmentHasAlreadyExistedException.class)
-    protected ResponseEntity<Object> departmentHasAlreadyExisted(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleDepartmentHasAlreadyExisted(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Department with such parameters has already existed";
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
