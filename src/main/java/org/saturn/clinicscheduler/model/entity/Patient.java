@@ -41,7 +41,7 @@ public class Patient {
     @Column(name = "passport")
     private String passport;
 
-    @NaturalId
+    @NaturalId(mutable = true)
     @Column(name = "phone_number")
     private String phoneNumber;
 

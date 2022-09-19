@@ -1,15 +1,6 @@
 package org.saturn.clinicscheduler.handler;
 
-import org.saturn.clinicscheduler.exception.AppointmentNotFoundException;
-import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
-import org.saturn.clinicscheduler.exception.DepartmentHasAlreadyExistedException;
-import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
-import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
-import org.saturn.clinicscheduler.exception.PatientNotFoundException;
-import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
-import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
-import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
-import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
+import org.saturn.clinicscheduler.exception.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -118,6 +109,14 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DepartmentHasAlreadyExistedException.class)
     protected ResponseEntity<Object> handleDepartmentHasAlreadyExisted(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Department with such parameters has already existed";
+
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(BusyPassportException.class)
+    protected ResponseEntity<Object> handlePatientPassportBusy(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Passport must by unique";
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
