@@ -67,4 +67,10 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.createSpeciality(specialityDto));
     }
 
+    @PutMapping("/doctors/{id}")
+    public ResponseEntity<DoctorInfoDto> updateDoctor(@Valid @RequestBody DoctorCreateDto doctorCreateDto,
+                                                      @PathVariable Long id){
+        return ResponseEntity.ok(doctorService.updateDoctor(id, doctorCreateDto));
+    }
+
 }

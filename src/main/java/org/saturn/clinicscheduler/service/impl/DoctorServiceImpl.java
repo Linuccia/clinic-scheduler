@@ -119,4 +119,14 @@ public class DoctorServiceImpl implements DoctorService {
         return specialityMapper.toSpecialityDTO(savedSpeciality);
     }
 
+    @Override
+    @Transactional
+    public DoctorInfoDto updateDoctor(Long id, DoctorCreateDto doctorCreateDto) {
+        Doctor doc = doctorRepository.findById(id).orElseThrow(DoctorNotFoundException::new);
+        Doctor doctor = doctorMapper.mapToDoctor(doctorCreateDto, doc.getSpeciality());
+        doctor.setId(id);
+        doctorRepository.save(doctor);
+        return doctorMapper.mapToInfoDto(doctor);
+    }
+
 }

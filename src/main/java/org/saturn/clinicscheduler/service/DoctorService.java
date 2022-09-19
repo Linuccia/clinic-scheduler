@@ -25,4 +25,6 @@ public interface DoctorService {
 
     SpecialityDto createSpeciality(SpecialityDto specialityDto);
 
+    DoctorInfoDto updateDoctor(Long id, DoctorCreateDto doctorDto);
+
 }
