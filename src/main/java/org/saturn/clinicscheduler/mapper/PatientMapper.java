@@ -15,4 +15,6 @@ public interface PatientMapper {
 
     Patient fromCreateDto(PatientCreateDto patientCreateDto);
 
+    Patient fromCreateDto(PatientCreateDto patientCreateDto, Long id);
+
 }

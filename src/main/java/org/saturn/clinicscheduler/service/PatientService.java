@@ -13,4 +13,8 @@ public interface PatientService {
 
     List<PatientInfoDto> getAllPatients();
 
+    PatientInfoDto updatePatient(Long id, PatientCreateDto patientCreateDto);
+
+    PatientInfoDto deletePatient(Long id);
+
 }

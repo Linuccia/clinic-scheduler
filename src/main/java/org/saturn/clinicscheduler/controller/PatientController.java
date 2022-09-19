@@ -6,9 +6,11 @@ import org.saturn.clinicscheduler.model.dto.response.PatientInfoDto;
 import org.saturn.clinicscheduler.service.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,15 +31,25 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPatient(id));
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PatientInfoDto> createPatient(@Valid @RequestBody PatientCreateDto patientCreateDto) {
         return ResponseEntity.ok(patientService.createPatient(patientCreateDto));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<PatientInfoDto>> getAllPatient() {
         return ResponseEntity.ok(patientService.getAllPatients());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientInfoDto> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientCreateDto patientCreateDto) {
+        return ResponseEntity.ok(patientService.updatePatient(id, patientCreateDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PatientInfoDto> deletePatient(@PathVariable Long id) {
+        return ResponseEntity.ok(patientService.deletePatient(id));
     }
 
 }
