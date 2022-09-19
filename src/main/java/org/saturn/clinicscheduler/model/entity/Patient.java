@@ -1,5 +1,7 @@
 package org.saturn.clinicscheduler.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class Patient {
 
     @Id

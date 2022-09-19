@@ -1,6 +1,8 @@
 package org.saturn.clinicscheduler.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.saturn.clinicscheduler.model.entity.constant.Gender;
@@ -23,6 +25,8 @@ import java.time.LocalDate;
 @Table(name = "doctor")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Doctor {
 
     @Id

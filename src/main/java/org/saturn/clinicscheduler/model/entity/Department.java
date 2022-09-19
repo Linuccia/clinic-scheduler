@@ -1,6 +1,7 @@
 package org.saturn.clinicscheduler.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"id", "phoneNumber"})
+@Builder
 public class Department {
 
     @Id
