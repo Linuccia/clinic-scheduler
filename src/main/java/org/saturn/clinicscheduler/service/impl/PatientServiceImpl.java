@@ -25,7 +25,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientInfoDto getPatient(Long id) {
-        Patient patient = checkPatient(id);
+        Patient patient = findPatientById(id);
 
         return patientMapper.toInfoDto(patient);
     }
@@ -33,12 +33,10 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @Transactional
     public PatientInfoDto createPatient(PatientCreateDto patientCreateDto) {
-        throwIfPhoneBusy(patientCreateDto);
-        throwIfPassportBusy(patientCreateDto);
-        Patient patientCreatedEntity = patientMapper.fromCreateDto(patientCreateDto);
-        Patient patientSavedEntity = patientRepository.save(patientCreatedEntity);
+        throwIfPhoneBusy(patientCreateDto.getPhoneNumber());
+        throwIfPassportBusy(patientCreateDto.getPassport());
 
-        return patientMapper.toInfoDto(patientSavedEntity);
+        return patientMapper.toInfoDto(patientRepository.save(patientMapper.fromCreateDto(patientCreateDto)));
     }
 
     @Override
@@ -51,19 +49,17 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @Transactional
     public PatientInfoDto updatePatient(Long id, PatientCreateDto patientCreateDto) {
-        Patient patient = checkPatient(id);
+        Patient patient = findPatientById(id);
         String newPassport = patientCreateDto.getPassport();
         String newPhone = patientCreateDto.getPhoneNumber();
         if (!patient.getPassport().equals(newPassport)) {
-            throwIfPassportBusy(patientCreateDto);
+            throwIfPassportBusy(newPassport);
         }
         if (!patient.getPhoneNumber().equals(newPhone)) {
-            throwIfPhoneBusy(patientCreateDto);
+            throwIfPhoneBusy(newPhone);
         }
-        Patient patientCreatedEntity = patientMapper.fromCreateDto(patientCreateDto, id);
-        Patient patientSavedEntity = patientRepository.save(patientCreatedEntity);
 
-        return patientMapper.toInfoDto(patientSavedEntity);
+        return patientMapper.toInfoDto(patientRepository.save(patientMapper.fromCreateDto(patientCreateDto, id)));
     }
 
     @Override
@@ -74,21 +70,19 @@ public class PatientServiceImpl implements PatientService {
         return patient;
     }
 
-    private void throwIfPhoneBusy(PatientCreateDto patientCreateDto) {
-        String phone = patientCreateDto.getPhoneNumber();
+    private void throwIfPhoneBusy(String phone) {
         patientRepository.findByPhoneNumber(phone).ifPresent((s) -> {
             throw new BusyPhoneNumberException();
         });
     }
 
-    private void throwIfPassportBusy(PatientCreateDto patientCreateDto) {
-        String passport = patientCreateDto.getPassport();
+    private void throwIfPassportBusy(String passport) {
         patientRepository.findByPassport(passport).ifPresent((s) -> {
             throw new BusyPassportException();
         });
     }
 
-    private Patient checkPatient(Long id) {
+    private Patient findPatientById(Long id) {
         return patientRepository
                 .findById(id)
                 .orElseThrow(() -> {

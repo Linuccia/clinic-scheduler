@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,11 +41,10 @@ public class Patient {
     @Column(name = "chi_policy")
     private String chiPolicy;
 
-    @Column(name = "passport")
+    @Column(name = "passport", unique = true)
     private String passport;
 
-    @NaturalId(mutable = true)
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "password")
