@@ -68,9 +68,9 @@ public class DoctorController {
     }
 
     @PutMapping("/doctors/{id}")
-    public ResponseEntity<DoctorInfoDto> updateDoctor(@PathVariable Long id, @RequestParam String attribute,
-                                                           @RequestParam String value){
-        return ResponseEntity.ok(doctorService.updateDoctor(id, attribute, value));
+    public ResponseEntity<DoctorInfoDto> updateDoctor(@Valid @RequestBody DoctorCreateDto doctorCreateDto,
+                                                      @PathVariable Long id){
+        return ResponseEntity.ok(doctorService.updateDoctor(id, doctorCreateDto));
     }
 
 }
