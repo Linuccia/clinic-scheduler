@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 
-class EntityGeneratorTest {
+public class EntityGeneratorTest {
 
     private static final LocalDate DEFAULT_BIRTHDATE = LocalDate.of(1975, 12, 12);
     private static final Gender DEFAULT_GENDER = Gender.муж;
