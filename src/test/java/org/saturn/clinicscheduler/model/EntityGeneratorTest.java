@@ -9,8 +9,8 @@ import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.model.entity.constant.Gender;
 
 import java.sql.Time;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class EntityGeneratorTest {
@@ -69,7 +69,7 @@ public class EntityGeneratorTest {
         return Patient.builder()
                 .id(DEFAULT_ID)
                 .name(DEFAULT_NAME)
-                .birthdate(Date.from(Instant.from(DEFAULT_BIRTHDATE)))
+                .birthdate(Date.from(DEFAULT_BIRTHDATE.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
                 .gender(DEFAULT_GENDER.toString())
                 .chiPolicy(CHI_POLICY)
                 .passport(PASSPORT)
