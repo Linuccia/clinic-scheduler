@@ -94,7 +94,7 @@ class ScheduleServiceImplTest {
                                                         .thenReturn(Optional.of(doctor));
         Mockito.when(departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId()))
                                                         .thenReturn(Optional.of(department));
-        ScheduleResponseDto scheduleResponseDto = scheduleService.changeSchedule(1L, scheduleUnpartitionedDto);
+        scheduleService.changeSchedule(1L, scheduleUnpartitionedDto);
         Mockito.verify(doctorRepository, Mockito.times(1))
                                                             .findById(scheduleUnpartitionedDto.getDoctorId());
         Mockito.verify(departmentRepository, Mockito.times(1))
