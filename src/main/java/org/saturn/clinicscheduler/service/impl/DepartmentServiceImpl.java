@@ -37,7 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentResponseDto deleteDepartment(Long id) {
-        Department department = departmentRepository.getReferenceById(id);
+        Department department = departmentRepository.findById(id).orElseThrow(DepartmentNotFoundException::new);
         departmentRepository.delete(department);
 
         return departmentMapper.mapToResponseDto(department);
