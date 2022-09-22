@@ -1,5 +1,7 @@
 package org.saturn.clinicscheduler.model;
 
+import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
+import org.saturn.clinicscheduler.model.dto.response.PatientInfoDto;
 import org.saturn.clinicscheduler.model.entity.Appointment;
 import org.saturn.clinicscheduler.model.entity.Department;
 import org.saturn.clinicscheduler.model.entity.Doctor;
@@ -78,6 +80,17 @@ public class EntityGeneratorTest {
                 .build();
     }
 
+    public static PatientInfoDto patientInfoDto() {
+        return PatientInfoDto.builder()
+                .name(DEFAULT_NAME)
+                .birthdate(DEFAULT_BIRTHDATE)
+                .gender(DEFAULT_GENDER.toString())
+                .chiPolicy(CHI_POLICY)
+                .passport(PASSPORT)
+                .phoneNumber(PATIENT_NUMBER)
+                .build();
+    }
+
     public static Schedule schedule() {
         return Schedule.builder()
                 .id(DEFAULT_ID)
@@ -96,6 +109,17 @@ public class EntityGeneratorTest {
                 .id(DEFAULT_ID)
                 .patient(patient())
                 .doctor(doctor())
+                .date(SCHEDULE_DATE)
+                .startTime(START_TIME)
+                .build();
+    }
+
+    public static AppointmentResponseDto appointmentResponseDto() {
+        return AppointmentResponseDto.builder()
+                .doctorName(DEFAULT_NAME)
+                .departmentAddress(DEPARTMENT_ADDRESS)
+                .cabinet(1)
+                .patientInfo(patientInfoDto())
                 .date(SCHEDULE_DATE)
                 .startTime(START_TIME)
                 .build();
