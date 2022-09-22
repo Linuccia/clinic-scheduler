@@ -1,5 +1,11 @@
 package org.saturn.clinicscheduler.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.saturn.clinicscheduler.model.DtoGeneratorTest.departmentRequestDTO;
+import static org.saturn.clinicscheduler.model.DtoGeneratorTest.departmentResponseDto;
+import static org.saturn.clinicscheduler.model.EntityGeneratorTest.department;
+
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,19 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.DepartmentMapper;
 import org.saturn.clinicscheduler.model.dto.request.DepartmentRequestDTO;
 import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
 import org.saturn.clinicscheduler.model.entity.Department;
 import org.saturn.clinicscheduler.repository.DepartmentRepository;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.saturn.clinicscheduler.model.DtoGeneratorTest.departmentRequestDTO;
-import static org.saturn.clinicscheduler.model.DtoGeneratorTest.departmentResponseDto;
-import static org.saturn.clinicscheduler.model.EntityGeneratorTest.department;
 
 @ExtendWith(MockitoExtension.class)
 public class DepartmentServiceImplTest {
@@ -75,8 +74,8 @@ public class DepartmentServiceImplTest {
 
     @Test
     void shouldThrowExceptionOnWrongDoctorId() {
-        Mockito.when(departmentRepository.findById(10L)).thenThrow(new DepartmentNotFoundException());
-        Assertions.assertThrows(DepartmentNotFoundException.class, () -> departmentService.deleteDepartment(10L));
+        Mockito.when(departmentRepository.findById(10L)).thenThrow(new ObjectNotFoundException("Department"));
+        Assertions.assertThrows(ObjectNotFoundException.class, () -> departmentService.deleteDepartment(10L));
 
         Mockito.verify(departmentRepository, Mockito.times(0)).deleteById(10L);
     }

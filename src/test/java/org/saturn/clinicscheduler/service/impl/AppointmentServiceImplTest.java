@@ -25,8 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.saturn.clinicscheduler.exception.PatientNotFoundException;
-import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.AppointmentMapper;
 import org.saturn.clinicscheduler.mapper.PatientMapper;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
@@ -136,9 +135,9 @@ class AppointmentServiceImplTest {
 
         when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
         when(appointmentRepository.findAllByPatient(patient)).thenThrow(
-            PatientNotFoundException.class);
+            ObjectNotFoundException.class);
 
-        assertThrows(PatientNotFoundException.class,
+        assertThrows(ObjectNotFoundException.class,
             () -> appointmentService.getAllAppointmentsByPatient(1L));
 
         verify(patientRepository, times(1)).findById(1L);
@@ -152,9 +151,9 @@ class AppointmentServiceImplTest {
         when(appointmentRepository.findAllByPatient(patient)).thenReturn(appointments);
         when(scheduleRepository.findByDoctorAndDateAndStartTime(appointment.getDoctor(),
             new Date(appointment.getDate().getTime()), appointment.getStartTime())).thenThrow(
-            ScheduleSlotNotFoundException.class);
+            ObjectNotFoundException.class);
 
-        assertThrows(ScheduleSlotNotFoundException.class,
+        assertThrows(ObjectNotFoundException.class,
             () -> appointmentService.getAllAppointmentsByPatient(1L));
 
         verify(patientRepository, times(1)).findById(1L);
