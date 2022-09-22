@@ -87,4 +87,18 @@ class ScheduleServiceImplTest {
         assertEquals(scheduleResponseDtos, scheduleService.getAllDoctorSchedules(doctor.getId()));
     }
 
+    @Test
+    void changeSchedule() {
+        Mockito.when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
+        Mockito.when(doctorRepository.findById(scheduleUnpartitionedDto.getDoctorId()))
+                                                        .thenReturn(Optional.of(doctor));
+        Mockito.when(departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId()))
+                                                        .thenReturn(Optional.of(department));
+        scheduleService.changeSchedule(1L, scheduleUnpartitionedDto);
+        Mockito.verify(doctorRepository, Mockito.times(1))
+                                                            .findById(scheduleUnpartitionedDto.getDoctorId());
+        Mockito.verify(departmentRepository, Mockito.times(1))
+                                                            .findById(scheduleUnpartitionedDto.getDepartmentId());
+    }
+
 }
