@@ -1,10 +1,8 @@
 package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.saturn.clinicscheduler.exception.AppointmentNotFoundException;
-import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
-import org.saturn.clinicscheduler.exception.PatientNotFoundException;
-import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
+import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
 import org.saturn.clinicscheduler.mapper.AppointmentMapper;
 import org.saturn.clinicscheduler.mapper.PatientMapper;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
@@ -40,10 +38,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public AppointmentResponseDto createAppointment(Long patientId, Long scheduleId) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow(PatientNotFoundException::new);
-        Schedule timeSlot = scheduleRepository.findById(scheduleId).orElseThrow(ScheduleSlotNotFoundException::new);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(
+                () -> new ObjectNotFoundException("Patient"));
+        Schedule timeSlot = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new ObjectNotFoundException("Time slot"));
         if (Boolean.FALSE.equals(timeSlot.getIsAvailable())) {
-            throw new ScheduleSlotNotFoundException();
+            throw new ScheduleIsBookedException();
         }
         timeSlot.setIsAvailable(false);
         scheduleRepository.save(timeSlot);
@@ -61,35 +61,38 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByPatient(Long patientId) {
         Patient patient = patientRepository.findById(patientId).
-                orElseThrow(PatientNotFoundException::new);
+                orElseThrow(() -> new ObjectNotFoundException("Patient"));
         List<Appointment> appointments = appointmentRepository.findAllByPatient(patient);
 
         return appointments.stream().map(a -> appointmentMapper.toResponseDto(a, scheduleRepository
                         .findByDoctorAndDateAndStartTime(a.getDoctor(), new Date(a.getDate().getTime()), a.getStartTime())
-                        .orElseThrow(ScheduleSlotNotFoundException::new), patientMapper.toInfoDto(patient)))
+                        .orElseThrow(
+                                () -> new ObjectNotFoundException("Time slot")), patientMapper.toInfoDto(patient)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AppointmentResponseDto> getAllAppointmentsByDoctor(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(DoctorNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Doctor"));
         List<Appointment> appointments = appointmentRepository.findAllByDoctor(doctor);
 
         return appointments.stream().map(a -> appointmentMapper.toResponseDto(a, scheduleRepository
                         .findByDoctorAndDateAndStartTime(a.getDoctor(), new Date(a.getDate().getTime()), a.getStartTime())
-                        .orElseThrow(ScheduleSlotNotFoundException::new), patientMapper.toInfoDto(a.getPatient())))
+                        .orElseThrow(
+                                () -> new ObjectNotFoundException("Time slot")), patientMapper.toInfoDto(a.getPatient())))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void cancelAppointment(Long id) {
-        Appointment appointment = appointmentRepository.findById(id).orElseThrow(AppointmentNotFoundException::new);
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(
+                () -> new ObjectNotFoundException("Appointment"));
         Schedule schedule = scheduleRepository
                 .findByDoctorAndDateAndStartTime(appointment.getDoctor(), new Date(appointment.getDate().getTime()),
                         appointment.getStartTime())
-                .orElseThrow(ScheduleSlotNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Time slot"));
         schedule.setIsAvailable(true);
         scheduleRepository.save(schedule);
         appointmentRepository.delete(appointment);

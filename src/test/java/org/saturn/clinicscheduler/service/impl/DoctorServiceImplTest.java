@@ -8,8 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
-import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
@@ -109,8 +108,8 @@ public class DoctorServiceImplTest {
 
     @Test
     void throwExceptionOnWrongDoctorId() {
-        Mockito.when(doctorRepository.findById(10L)).thenThrow(new DoctorNotFoundException());
-        Assertions.assertThrows(DoctorNotFoundException.class, () -> doctorService.deleteDoctor(10L));
+        Mockito.when(doctorRepository.findById(10L)).thenThrow(new ObjectNotFoundException("Doctor"));
+        Assertions.assertThrows(ObjectNotFoundException.class, () -> doctorService.deleteDoctor(10L));
 
         Mockito.verify(doctorRepository, Mockito.times(0)).deleteById(10L);
     }
@@ -122,7 +121,7 @@ public class DoctorServiceImplTest {
         Mockito.verify(specialityRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(specialityRepository, Mockito.times(1)).findAll();
         Mockito.when(specialityRepository.findById(2L)).thenReturn(Optional.empty());
-        Assertions.assertThrows(SpecialityNotFoundException.class, () ->
+        Assertions.assertThrows(ObjectNotFoundException.class, () ->
                                                         doctorService.changeSpeciality(2L, "Терапевт"));
     }
 

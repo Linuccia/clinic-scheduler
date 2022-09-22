@@ -2,6 +2,7 @@ package org.saturn.clinicscheduler.controller;
 
 import java.util.List;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.service.AppointmentService;
@@ -22,8 +23,8 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    public ResponseEntity<AppointmentResponseDto> createAnAppointment(@RequestParam Long patientId,
-                                                                      @RequestParam Long scheduleId) {
+    public ResponseEntity<AppointmentResponseDto> createAnAppointment(@NonNull @RequestParam Long patientId,
+                                                                      @NonNull @RequestParam Long scheduleId) {
         return ResponseEntity.ok(appointmentService.createAppointment(patientId, scheduleId));
     }
 

@@ -3,7 +3,7 @@ package org.saturn.clinicscheduler.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.exception.BusyPassportException;
 import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
-import org.saturn.clinicscheduler.exception.PatientNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.PatientMapper;
 import org.saturn.clinicscheduler.model.dto.request.PatientCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.PatientInfoDto;
@@ -86,7 +86,7 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository
                 .findById(id)
                 .orElseThrow(() -> {
-                    throw new PatientNotFoundException();
+                    throw new ObjectNotFoundException("Patient");
                 });
     }
 

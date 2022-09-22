@@ -29,7 +29,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "org.saturn.clinicscheduler.repository",
         entityManagerFactoryRef = "emf", transactionManagerRef = "transManager")
 @ComponentScan(value = "org.saturn.clinicscheduler")
-@PropertySource(value = "classpath:application.properties")
+@PropertySource({"classpath:application.properties", "classpath:exmessages.properties"})
 public class Config implements WebMvcConfigurer {
 
     private final Environment env;

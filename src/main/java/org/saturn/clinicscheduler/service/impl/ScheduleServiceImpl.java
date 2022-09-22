@@ -1,10 +1,8 @@
 package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
-import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
-import org.saturn.clinicscheduler.exception.ScheduleSlotNotFoundException;
 import org.saturn.clinicscheduler.mapper.ScheduleMapper;
 import org.saturn.clinicscheduler.model.dto.request.ScheduleUnpartitionedDto;
 import org.saturn.clinicscheduler.model.dto.response.ScheduleResponseDto;
@@ -36,9 +34,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     public List<ScheduleResponseDto> addSchedule(ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
         Doctor doctor = doctorRepository.findById(scheduleUnpartitionedDto.getDoctorId())
-                .orElseThrow(DoctorNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Doctor"));
         Department department = departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId())
-                .orElseThrow(DepartmentNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Department"));
         List<Schedule> schedules = mapper.mapToSchedules(scheduleUnpartitionedDto, doctor, department);
         schedules = scheduleRepository.saveAll(schedules);
 
@@ -48,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponseDto> getAllDoctorSchedules(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(DoctorNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Doctor"));
         List<Schedule> schedules = scheduleRepository.findAllByDoctor(doctor);
         schedules = schedules.stream()
                 .filter(s -> s.getDate().toLocalDate().isAfter(LocalDate.now())
@@ -61,14 +59,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional
     public ScheduleResponseDto changeSchedule(Long id, ScheduleUnpartitionedDto scheduleUnpartitionedDto) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(ScheduleSlotNotFoundException::new);
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new ObjectNotFoundException("Schedule slot"));
         if (Boolean.FALSE.equals(schedule.getIsAvailable())) {
             throw new ScheduleIsBookedException();
         }
         Doctor doctor = doctorRepository.findById(scheduleUnpartitionedDto.getDoctorId())
-                .orElseThrow(DoctorNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Doctor"));
         Department department = departmentRepository.findById(scheduleUnpartitionedDto.getDepartmentId())
-                .orElseThrow(DepartmentNotFoundException::new);
+                .orElseThrow(() -> new ObjectNotFoundException("Department"));
         schedule = mapper.mapToSingleSchedule(scheduleUnpartitionedDto, doctor, department, schedule);
 
         return mapper.mapToResponseDto(scheduleRepository.save(schedule));

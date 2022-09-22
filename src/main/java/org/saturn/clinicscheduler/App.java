@@ -11,9 +11,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 
 public class App extends AbstractAnnotationConfigDispatcherServletInitializer {
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{Config.class};
+        return new Class[] {Config.class};
     }
 
     @Override
@@ -48,4 +49,5 @@ public class App extends AbstractAnnotationConfigDispatcherServletInitializer {
 
         return context;
     }
+
 }

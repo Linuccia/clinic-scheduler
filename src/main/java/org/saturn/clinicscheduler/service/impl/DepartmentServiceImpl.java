@@ -2,7 +2,7 @@ package org.saturn.clinicscheduler.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.saturn.clinicscheduler.exception.DepartmentHasAlreadyExistedException;
-import org.saturn.clinicscheduler.exception.DepartmentNotFoundException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.DepartmentMapper;
 import org.saturn.clinicscheduler.model.dto.request.DepartmentRequestDTO;
 import org.saturn.clinicscheduler.model.dto.response.DepartmentResponseDto;
@@ -45,7 +45,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentResponseDto updateDepartment(Long id, DepartmentRequestDTO departmentRequestDTO) {
-        Department updateDepartment = departmentRepository.findById(id).orElseThrow(DepartmentNotFoundException::new);
+        Department updateDepartment = departmentRepository.findById(id).orElseThrow(
+                () -> new ObjectNotFoundException("Department"));
         if (departmentRepository.findAll().stream().anyMatch(department -> department.equals(departmentMapper
                 .mapToEntity(departmentRequestDTO)))) {
             throw new DepartmentHasAlreadyExistedException();

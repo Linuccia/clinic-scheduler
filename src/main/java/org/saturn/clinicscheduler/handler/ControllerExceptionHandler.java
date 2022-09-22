@@ -1,6 +1,12 @@
 package org.saturn.clinicscheduler.handler;
 
-import org.saturn.clinicscheduler.exception.*;
+import org.saturn.clinicscheduler.exception.BusyPassportException;
+import org.saturn.clinicscheduler.exception.BusyPhoneNumberException;
+import org.saturn.clinicscheduler.exception.DepartmentHasAlreadyExistedException;
+import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
+import org.saturn.clinicscheduler.exception.ScheduleIsBookedException;
+import org.saturn.clinicscheduler.exception.SpecialityAlreadyExistException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +26,19 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @Value("${specialityExists}")
+    public String SPECIALITY_ALREADY_EXISTS;
+    @Value("${bookedSchedule}")
+    public String BOOKED_SCHEDULE;
+    @Value("${departmentExists}")
+    public String DEPARTMENT_EXISTS;
+    @Value("${busyPassport}")
+    public String BUSY_PASSPORT;
+    @Value("${busyNumber}")
+    public String PHONE_NUMBER_BUSY;
+    @Value("${notFound}")
+    private String NOT_FOUND;
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
@@ -34,65 +53,25 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(DoctorNotFoundException.class)
-    protected ResponseEntity<Object> handleDoctorNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Doctor with such ID or speciality was not found";
+    @ExceptionHandler(ObjectNotFoundException.class)
+    protected ResponseEntity<Object> handleObjectNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = ex.getMessage() + " " + NOT_FOUND;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-    @ExceptionHandler(DepartmentNotFoundException.class)
-    protected ResponseEntity<Object> handleDepartmentNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Department with such ID was not found";
-
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-    @ExceptionHandler(PatientNotFoundException.class)
-    protected ResponseEntity<Object> handlePatientNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Patient does not exist";
-
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(BusyPhoneNumberException.class)
     protected ResponseEntity<Object> handlePatientPhoneNumberBusy(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Phone must by unique";
+        String bodyOfResponse = PHONE_NUMBER_BUSY;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-    @ExceptionHandler(SpecialityNotFoundException.class)
-    protected ResponseEntity<Object> handleSpecialityNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Speciality with such ID was not found";
-
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-    }
-
-    @ExceptionHandler(ScheduleSlotNotFoundException.class)
-    protected ResponseEntity<Object> handleScheduleNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "This time slot is unavailable";
-
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-    }
-
-    @ExceptionHandler(AppointmentNotFoundException.class)
-    protected ResponseEntity<Object> handleAppointmentNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Appointment with such ID was not found";
-
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-    }
-
     @ExceptionHandler(SpecialityAlreadyExistException.class)
     protected ResponseEntity<Object> handleSpecialityAlreadyExist(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Speciality with such name already exist";
+        String bodyOfResponse = SPECIALITY_ALREADY_EXISTS;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
@@ -100,7 +79,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ScheduleIsBookedException.class)
     protected ResponseEntity<Object> handleScheduleIsBooked(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "This schedule is booked. You can't change it";
+        String bodyOfResponse = BOOKED_SCHEDULE;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
@@ -108,7 +87,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DepartmentHasAlreadyExistedException.class)
     protected ResponseEntity<Object> handleDepartmentHasAlreadyExisted(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Department with such parameters has already existed";
+        String bodyOfResponse = DEPARTMENT_EXISTS;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
@@ -116,7 +95,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusyPassportException.class)
     protected ResponseEntity<Object> handlePatientPassportBusy(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Passport must by unique";
+        String bodyOfResponse = BUSY_PASSPORT;
 
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
