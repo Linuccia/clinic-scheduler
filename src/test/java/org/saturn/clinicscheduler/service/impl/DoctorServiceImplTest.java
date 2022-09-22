@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.saturn.clinicscheduler.exception.DoctorNotFoundException;
+import org.saturn.clinicscheduler.exception.SpecialityNotFoundException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
@@ -112,6 +113,17 @@ public class DoctorServiceImplTest {
         Assertions.assertThrows(DoctorNotFoundException.class, () -> doctorService.deleteDoctor(10L));
 
         Mockito.verify(doctorRepository, Mockito.times(0)).deleteById(10L);
+    }
+
+    @Test
+    void changeSpecialty() {
+        Mockito.when(specialityRepository.findById(1L)).thenReturn(Optional.ofNullable(speciality));
+        doctorService.changeSpeciality(1L, "Терапевт");
+        Mockito.verify(specialityRepository, Mockito.times(1)).findById(1L);
+        Mockito.verify(specialityRepository, Mockito.times(1)).findAll();
+        Mockito.when(specialityRepository.findById(2L)).thenReturn(Optional.empty());
+        Assertions.assertThrows(SpecialityNotFoundException.class, () ->
+                                                        doctorService.changeSpeciality(2L, "Терапевт"));
     }
 
 }
