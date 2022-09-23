@@ -10,8 +10,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.DoctorMapper;
+import org.saturn.clinicscheduler.mapper.SpecialityMapper;
+import org.saturn.clinicscheduler.model.DtoGeneratorTest;
 import org.saturn.clinicscheduler.model.dto.request.DoctorCreateDto;
 import org.saturn.clinicscheduler.model.dto.response.DoctorInfoDto;
+import org.saturn.clinicscheduler.model.dto.response.SpecialityDto;
 import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Speciality;
 import org.saturn.clinicscheduler.model.entity.constant.Gender;
@@ -35,6 +38,7 @@ public class DoctorServiceImplTest {
     private DoctorInfoDto doctorInfoDto;
     private DoctorCreateDto doctorCreateDto;
     private Speciality speciality;
+    private SpecialityDto specialityDto;
 
     @Mock
     DoctorRepository doctorRepository;
@@ -42,6 +46,8 @@ public class DoctorServiceImplTest {
     DoctorMapper doctorMapper;
     @Mock
     SpecialityRepository specialityRepository;
+    @Mock
+    SpecialityMapper specialityMapper;
     @InjectMocks
     DoctorServiceImpl doctorService;
 
@@ -51,13 +57,15 @@ public class DoctorServiceImplTest {
         doctorInfoDto = doctorInfoDto();
         doctorCreateDto = doctorCreateDto();
         speciality = speciality();
+        specialityDto = DtoGeneratorTest.specialityDto();
     }
 
     void assertEqualsRequestAndResponse(DoctorCreateDto request, DoctorInfoDto response) {
         assertEquals(request.getName(), response.getName());
         assertEquals(request.getBirthdate(), response.getBirthdate());
         assertEquals(Gender.valueOf(request.getGender()), response.getGender());
-        assertEquals(specialityRepository.findById(request.getSpecialityId()).get().getName(), response.getSpeciality());
+        assertEquals(specialityRepository.findById(request.getSpecialityId()).get().getName(),
+            response.getSpeciality());
         assertEquals(request.getWorksFrom(), response.getWorksFrom());
         assertEquals(request.getPhoneNumber(), response.getPhoneNumber());
     }
@@ -108,8 +116,10 @@ public class DoctorServiceImplTest {
 
     @Test
     void throwExceptionOnWrongDoctorId() {
-        Mockito.when(doctorRepository.findById(10L)).thenThrow(new ObjectNotFoundException("Doctor"));
-        Assertions.assertThrows(ObjectNotFoundException.class, () -> doctorService.deleteDoctor(10L));
+        Mockito.when(doctorRepository.findById(10L))
+            .thenThrow(new ObjectNotFoundException("Doctor"));
+        Assertions.assertThrows(ObjectNotFoundException.class,
+            () -> doctorService.deleteDoctor(10L));
 
         Mockito.verify(doctorRepository, Mockito.times(0)).deleteById(10L);
     }
@@ -122,7 +132,20 @@ public class DoctorServiceImplTest {
         Mockito.verify(specialityRepository, Mockito.times(1)).findAll();
         Mockito.when(specialityRepository.findById(2L)).thenReturn(Optional.empty());
         Assertions.assertThrows(ObjectNotFoundException.class, () ->
-                                                        doctorService.changeSpeciality(2L, "Терапевт"));
+            doctorService.changeSpeciality(2L, "Терапевт"));
     }
 
+    @Test
+    void createSpecialtyWithSuccess() {
+        Mockito.when(specialityRepository.save(speciality)).thenReturn(speciality);
+        Mockito.when(specialityMapper.toSpeciality(specialityDto)).thenReturn(speciality);
+        Mockito.when(specialityMapper.toSpecialityDTO(speciality)).thenReturn(specialityDto);
+
+        var actualResult = doctorService.createSpeciality(specialityDto);
+
+        assertEquals(actualResult, specialityDto);
+
+        Mockito.verify(specialityRepository, Mockito.times(1))
+            .save(speciality);
+    }
 }
