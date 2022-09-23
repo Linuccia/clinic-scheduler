@@ -28,6 +28,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.saturn.clinicscheduler.exception.ObjectNotFoundException;
 import org.saturn.clinicscheduler.mapper.AppointmentMapper;
 import org.saturn.clinicscheduler.mapper.PatientMapper;
+import org.saturn.clinicscheduler.model.DtoGeneratorTest;
+import org.saturn.clinicscheduler.model.EntityGeneratorTest;
 import org.saturn.clinicscheduler.model.dto.response.AppointmentResponseDto;
 import org.saturn.clinicscheduler.model.dto.response.PatientInfoDto;
 import org.saturn.clinicscheduler.model.entity.Appointment;
@@ -35,6 +37,7 @@ import org.saturn.clinicscheduler.model.entity.Doctor;
 import org.saturn.clinicscheduler.model.entity.Patient;
 import org.saturn.clinicscheduler.model.entity.Schedule;
 import org.saturn.clinicscheduler.repository.AppointmentRepository;
+import org.saturn.clinicscheduler.repository.DoctorRepository;
 import org.saturn.clinicscheduler.repository.PatientRepository;
 import org.saturn.clinicscheduler.repository.ScheduleRepository;
 
@@ -48,6 +51,8 @@ class AppointmentServiceImplTest {
     @Mock
     private PatientRepository patientRepository;
     @Mock
+    private DoctorRepository doctorRepository;
+    @Mock
     private PatientMapper patientMapper;
     @Mock
     private AppointmentMapper appointmentMapper;
@@ -58,6 +63,7 @@ class AppointmentServiceImplTest {
     private Schedule schedule;
     private Patient patient;
     private PatientInfoDto patientInfoDto;
+    private Doctor doctor;
     private AppointmentResponseDto appointmentResponseDto;
     private List<Appointment> appointments;
     private List<AppointmentResponseDto> appointmentsDto;
@@ -68,9 +74,11 @@ class AppointmentServiceImplTest {
         schedule = schedule();
         patient = patient();
         patientInfoDto = patientInfoDto();
+        doctor = EntityGeneratorTest.doctor();
         appointmentResponseDto = appointmentResponseDto();
         appointments = appointments();
         appointmentsDto = appointmentsDto();
+
     }
 
     @Test
@@ -158,5 +166,64 @@ class AppointmentServiceImplTest {
 
         verify(patientRepository, times(1)).findById(1L);
         verify(appointmentRepository, times(1)).findAllByPatient(patient);
+    }
+
+    @Test
+    void getAllAppointmentsByDoctorWithSuccess() {
+        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
+        when(appointmentRepository.findAllByDoctor(doctor)).thenReturn(appointments);
+
+        for (Appointment a : appointments) {
+            when(appointmentMapper.toResponseDto(a, schedule, patientInfoDto)).thenReturn(
+                appointmentResponseDto
+            );
+            when(scheduleRepository.findByDoctorAndDateAndStartTime(a.getDoctor(),
+                new Date(a.getDate().getTime()), a.getStartTime())).thenReturn(
+                Optional.ofNullable(schedule));
+            when(patientMapper.toInfoDto(a.getPatient())).thenReturn(patientInfoDto);
+        }
+
+        var actualResult = appointmentService
+            .getAllAppointmentsByDoctor(1L);
+
+        verify(doctorRepository, times(1)).findById(1L);
+        verify(appointmentRepository, times(1)).findAllByDoctor(doctor);
+        verify(appointmentMapper, times(3))
+            .toResponseDto(any(Appointment.class), any(Schedule.class), any(PatientInfoDto.class));
+        verify(scheduleRepository, times(3))
+            .findByDoctorAndDateAndStartTime(any(Doctor.class), any(Date.class), any(Time.class));
+        verify(patientMapper, times(3)).toInfoDto(any(Patient.class));
+
+        assertEquals(actualResult, appointmentsDto);
+    }
+
+    @Test
+    void getAllAppointmentsByDoctorWithFailureWhenPatientNotFoundException() {
+
+        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
+        when(appointmentRepository.findAllByDoctor(doctor)).thenThrow(
+            ObjectNotFoundException.class);
+
+        assertThrows(ObjectNotFoundException.class,
+            () -> appointmentService.getAllAppointmentsByDoctor(1L));
+
+        verify(doctorRepository, times(1)).findById(1L);
+        verify(appointmentRepository, times(1)).findAllByDoctor(doctor);
+    }
+
+    @Test
+    void getAllAppointmentsByDoctorWithFailureWhenScheduleSlotNotFoundException() {
+
+        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
+        when(appointmentRepository.findAllByDoctor(doctor)).thenReturn(appointments);
+        when(scheduleRepository.findByDoctorAndDateAndStartTime(appointment.getDoctor(),
+            new Date(appointment.getDate().getTime()), appointment.getStartTime())).thenThrow(
+            ObjectNotFoundException.class);
+
+        assertThrows(ObjectNotFoundException.class,
+            () -> appointmentService.getAllAppointmentsByDoctor(1L));
+
+        verify(doctorRepository, times(1)).findById(1L);
+        verify(appointmentRepository, times(1)).findAllByDoctor(doctor);
     }
 }
